@@ -5,7 +5,7 @@
       <p @click="login">去登录</p>
     </div>
     <div class="avatar" v-else>
-      <van-icon name="set" class="user_set" @click="toSetting" />
+      <van-icon name="set" class="user_set"/>
       <div class="user_avatar">
         <img :src="avatar" alt="头像" width="55" height="55" />
       </div>
@@ -36,6 +36,7 @@
       <van-cell icon="points" title="我的积分" is-link />
       <van-cell icon="gold-coin-o" title="我的优惠券" is-link />
       <van-cell icon="gift-o" title="收货地址" to="address" is-link />
+      <van-cell icon="setting-o" title="设置" to="setting" is-link />
     </van-cell-group>
 
     <BaseFooter active="user" />
@@ -134,7 +135,7 @@ export default {
   flex-direction: column;
   text-align: center;
   align-items: center;
-  background: #3d93e4;
+  background: rgb(240, 72, 72);
   padding: 10% 0 10% 0;
   box-sizing: border-box;
   position: relative;

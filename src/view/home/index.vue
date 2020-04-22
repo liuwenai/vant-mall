@@ -1,5 +1,5 @@
 <template>
-  <div class="tab_home">
+  <div class="tab-home">
     <div class="tal_class_searchBox">
       <van-search shape="round" placeholder="点击前往搜索" @click="onSearch" />
       <div class="tal_class_searchMask"></div>
@@ -97,7 +97,6 @@ export default {
       })
     },
     onDetailbook(data) {
-      debugger
       this.$router.push({ name: 'detailbook', params: { id: data.id } })
     },
     onSearch() {
@@ -126,6 +125,19 @@ export default {
 }
 .img {
   height: 80px;
+}
+.tabbar-home {
+  > div {
+    margin-bottom: 10px;
+  }
+  &__quit {
+    border: 0;
+    border-radius: 0;
+  }
+}
+
+.tal_class_searchBox {
+  position: relative;
 }
 
 .interval_bot {

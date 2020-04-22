@@ -1,7 +1,7 @@
 <template>
   <div>
     <router-view />
-    <van-tabbar route>
+    <van-tabbar route active-color="red" inactive-color="#000">
       <van-tabbar-item replace to="/home" icon="home-o">首页</van-tabbar-item>
       <!-- <van-tabbar-item replace to="/search" icon="search">搜索</van-tabbar-item> -->
       <!-- <van-tabbar-item replace to="/member" icon="friends-o">会员</van-tabbar-item> -->

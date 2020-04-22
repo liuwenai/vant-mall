@@ -13,7 +13,7 @@
       </van-cell>
       <van-cell class="goods-express">
         <van-col span="10">运费：{{ goods.express }}</van-col>
-        <van-col span="14">剩余：{{ goods.remain }}</van-col>
+        <van-col span="14">剩余：{{ book.kcsl }}</van-col>
       </van-cell>
     </van-cell-group>
 
@@ -80,7 +80,6 @@ export default {
 
   data() {
     return {
-      id: '',
       book: [],
       goods: {
         thumb: [
@@ -95,7 +94,6 @@ export default {
   },
   methods: {
     load() {
-      debugger
       const fid = this.$route.params.id
       booklist().then((response) => {
         const { code, books, msg } = response
