@@ -27,6 +27,16 @@
       </div>
     </div>
 
+    <!-- <van-card
+        v-for="book in books"
+        :key="book.id"
+        :title="book.title"
+        desc="暂无描述"
+        :num="book.kcsl"
+        :price="book.price +'.00'"
+        :thumb="book.picUrl"
+      ></van-card> -->
+
     <BaseFooter active="home" />
   </div>
 </template>

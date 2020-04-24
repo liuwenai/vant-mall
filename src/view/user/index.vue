@@ -18,7 +18,7 @@
       <van-cell icon="records" title="我的订单" to="order" is-link />
       <van-row class="user-links">
         <van-col span="6">
-          <van-icon name="pending-payment" />待付款
+          <van-icon name="pending-payment" @click="$router.push({path: '/order/1'})" />待付款
         </van-col>
         <van-col span="6">
           <van-icon name="records" />待发货
@@ -36,6 +36,7 @@
       <van-cell icon="points" title="我的积分" is-link />
       <van-cell icon="gold-coin-o" title="我的优惠券" is-link />
       <van-cell icon="gift-o" title="收货地址" to="address" is-link />
+      <van-cell icon="service-o" title="我的客服" to="news" is-link />
       <van-cell icon="setting-o" title="设置" to="setting" is-link />
     </van-cell-group>
 

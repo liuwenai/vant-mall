@@ -9,10 +9,10 @@
     <van-cell-group>
       <van-cell>
         <div class="goods-title">{{ book.title }}</div>
-        <div class="goods-price">{{ formatPrice(book.price) }}</div>
+        <div class="goods-price">{{ book.price }}</div>
       </van-cell>
       <van-cell class="goods-express">
-        <van-col span="10">运费：{{ goods.express }}</van-col>
+        <van-col span="10">运费：{{ book.express }}</van-col>
         <van-col span="14">剩余：{{ book.kcsl }}</van-col>
       </van-cell>
     </van-cell-group>
@@ -28,7 +28,7 @@
     </van-cell-group>
 
     <van-cell-group class="goods-cell-group">
-      <van-cell title="查看商品详情" is-link @click="sorry" />
+      <van-cell title="评论" is-link to="comment" />
     </van-cell-group>
 
     <van-goods-action>
@@ -97,8 +97,8 @@ export default {
       const fid = this.$route.params.id
       booklist().then((response) => {
         const { code, books, msg } = response
-        for(let i = 0; i < books.length; i++){
-          if(books[i].id === fid){
+        for (let i = 0; i < books.length; i++) {
+          if (books[i].id === fid) {
             this.book = books[i]
           }
         }
@@ -122,7 +122,6 @@ export default {
 <style lang="less">
 .goods {
   padding-bottom: 50px;
-
   &-swipe {
     img {
       width: 100%;

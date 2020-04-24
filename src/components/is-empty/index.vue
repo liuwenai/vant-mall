@@ -16,10 +16,10 @@ export default {
 </script>
 
 
-<style lang="scss" scoped>
+<style lang="less" scoped>
 .is_empty {
   text-align: center;
-  color: $font-color-gray;
+  color: #999;
   padding-top: 100px;
   > div {
     margin-bottom: 20px;

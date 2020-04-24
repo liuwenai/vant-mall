@@ -6,7 +6,6 @@ import {
 
 Vue.use(Router);
 
-import bm from './bm'
 
 const routes = [{
     path: '*',
@@ -33,6 +32,13 @@ const routes = [{
     component: () => import('../view/home/detailbook'),
     meta: {
       title: '商品详情'
+    }
+  },
+  {
+    name: 'comment',
+    component: () => import('../view/home/detailbook/comment'),
+    meta: {
+      title: '评论'
     }
   },
 
@@ -72,6 +78,13 @@ const routes = [{
     component: () => import('../view/user'),
     meta: {
       title: '个人中心',
+    }
+  },
+  {
+    name: 'news',
+    component: () => import('../view/user/news'),
+    meta: {
+      title: '客服',
     }
   },
   {
@@ -135,7 +148,6 @@ const routes = [{
     props: true,
     component: () => import('../view/login/forget-status')
   },
-  ...bm
 ];
 
 // add route path
