@@ -37,7 +37,7 @@
         :thumb="book.picUrl"
       ></van-card> -->
 
-    <BaseFooter active="home" />
+    <BaseFooter />
   </div>
 </template>
 

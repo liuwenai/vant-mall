@@ -17,7 +17,7 @@
       </van-cell>
     </van-cell-group>
 
-    <van-cell-group class="goods-cell-group">
+    <!-- <van-cell-group class="goods-cell-group">
       <van-cell value="进入店铺" icon="shop-o" is-link @click="sorry">
         <template slot="title">
           <span class="van-cell-text">有赞的店</span>
@@ -25,7 +25,7 @@
         </template>
       </van-cell>
       <van-cell title="线下门店" icon="location-o" is-link @click="sorry" />
-    </van-cell-group>
+    </van-cell-group> -->
 
     <van-cell-group class="goods-cell-group">
       <van-cell title="评论" is-link to="comment" />
@@ -38,13 +38,25 @@
       <van-goods-action-icon icon="cart-o" @click="onClickCart">
         购物车
       </van-goods-action-icon>
-      <van-goods-action-button type="warning" @click="sorry">
+      <van-goods-action-button type="warning" @click="addCart">
         加入购物车
       </van-goods-action-button>
       <van-goods-action-button type="danger" @click="sorry">
         立即购买
       </van-goods-action-button>
     </van-goods-action>
+
+    <van-sku
+      v-model="showBase"
+      :sku="skuDate.sku"
+      :goods="skuDate.goods"
+      :goods-id="skuDate.goods.id"
+      :quota="quota"
+      :quota-used="quotaUsed"
+      :hide-stock="hide_stock"
+      @buy-clicked="onBuyClicked"
+      @add-cart="onAddCartClicked"
+    />
   </div>
 </template>
 
@@ -61,12 +73,14 @@ import {
   GoodsAction,
   GoodsActionIcon,
   GoodsActionButton,
+  Sku,
 } from 'vant'
-import { booklist } from '@/api/mall'
+import { bookshow } from '@/api/mall'
 
 export default {
   components: {
     [Tag.name]: Tag,
+    [Sku.name]: Sku,
     [Col.name]: Col,
     [Icon.name]: Icon,
     [Cell.name]: Cell,
@@ -80,6 +94,16 @@ export default {
 
   data() {
     return {
+      showBase: false,
+      quota: 3,
+      quotaUsed: 0,
+      hide_stock: false,
+      skuDate:{
+        goods:{
+          id:""
+        },
+        sku: {}
+        },
       book: [],
       goods: {
         thumb: [
@@ -90,28 +114,31 @@ export default {
     }
   },
   mounted() {
-    this.load()
+    this.load(),
+    this.loadSku()
   },
   methods: {
     load() {
       const fid = this.$route.params.id
-      booklist().then((response) => {
-        const { code, books, msg } = response
-        for (let i = 0; i < books.length; i++) {
-          if (books[i].id === fid) {
-            this.book = books[i]
-          }
-        }
+      bookshow(fid).then((response) => {
+        this.book = response.book
       })
     },
+    loadSku(){
+      
+        
+      },
     formatPrice() {
       return '¥' + (this.goods.price / 100).toFixed(2)
     },
-
+    addCart() {
+      this.showBase = true
+    },
     onClickCart() {
       this.$router.push('cart')
     },
-
+    onBuyClicked() {},
+    onAddCartClicked() {},
     sorry() {
       Toast('暂无后续逻辑~')
     },

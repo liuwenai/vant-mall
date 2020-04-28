@@ -12,9 +12,10 @@ const prefix = "";
 export const booklist = () => {
   return axios.get(`${prefix}book/index`);
 };
-// 下载用户聘书
-export const downloadcert = () => {
-  return axios.get(`${prefix}userinfo/downloadcert`);
+
+// 显示用户聘书
+export const bookshow = id => {
+  return axios.get(`${prefix}book/index/${id}`);
 };
 
 

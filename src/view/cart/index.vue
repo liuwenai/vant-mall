@@ -4,13 +4,22 @@
       <img :src="avatar" alt srcset />
       <p @click="login">去登录</p>
     </div>-->
-    <div class="avatar">
+    <!-- <div class="avatar">
       <img
         src="http://nos.netease.com/mailpub/hxm/yanxuan-wap/p/20150730/style/img/icon-normal/noCart-a8fe3f12e5.png"
       />
       <p>购物车空空如也</p>
       <van-button round size="normal" type="info" to="home">去逛逛</van-button>
-    </div>
+    </div> -->
+    <van-card
+        v-for="book in books"
+        :key="book.id"
+        :title="book.title"
+        desc="暂无描述"
+        :num="book.kcsl"
+        :price="book.price +'.00'"
+        :thumb="book.picUrl"
+      ></van-card>
     <div>
       <!-- <van-goods-action>
         <van-goods-action-icon icon="chat-o" text="客服" color="#07c160" />
