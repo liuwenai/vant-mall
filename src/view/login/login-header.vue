@@ -3,7 +3,7 @@
 		<div class="store_avatar">
 			<img src="../../assets/images/avatar_default.png" alt="头像" width="55" height="55">
 		</div>
-		<div class="store_name">会员登录</div>
+		<div class="store_name">用户登录</div>
 	</div>
 </template>
 

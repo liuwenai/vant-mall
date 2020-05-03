@@ -1,10 +1,10 @@
 <template>
   <div>
-      <van-nav-bar title="设置" left-text="返回" left-arrow @click-left="onClickLeft" />
+      <van-nav-bar title="设置" left-arrow @click-left="onClickLeft" />
       <div style="width: 100%;margin-top: 10px;">
         <van-cell title="用户名" :value="username" />
-        <van-cell title="关于" is-link to="common" />
-        <van-cell title="隐私" is-link to="common" />
+        <van-cell title="我的收货地址" is-link to="address" />
+        <van-cell title="账户与安全" is-link to="my" />
         <van-cell title="通用" is-link to="common" />
       </div>
       <div style="display:flex;justify-content: center;">

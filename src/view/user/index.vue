@@ -1,6 +1,6 @@
 <template>
   <div class="tabber-user">
-    <div class="avatar" v-if="!isLogin">
+    <div class="avatar" v-if="isLogin">
       <img :src="avatar" alt srcset />
       <p @click="login">去登录</p>
     </div>
@@ -33,8 +33,6 @@
     </van-cell-group>
 
     <van-cell-group>
-      <van-cell icon="points" title="我的积分" is-link />
-      <van-cell icon="gold-coin-o" title="我的优惠券" is-link />
       <van-cell icon="gift-o" title="收货地址" to="address" is-link />
       <van-cell icon="service-o" title="我的客服" to="news" is-link />
       <van-cell icon="setting-o" title="设置" to="setting" is-link />
@@ -70,7 +68,6 @@ export default {
   },
   data() {
     return {
-      type: "",
       avatar_default: avatar_default,
       isLogin: false,
       background_image: "",
@@ -100,20 +97,11 @@ export default {
         "nick_name",
         "background_image",
         "avatar",
-        "type"
       );
-      this.type = infoData.type || "1";
       this.isLogin = infoData.user_id !== "" || false;
       this.nick_name = infoData.nick_name || "昵称";
       this.avatar = infoData.avatar || avatar_default;
       this.background_image = infoData.background_image || bg_default;
-    },
-    onUser() {
-      if (this.type === "1") {
-        this.$router.push({ name: "usersqb" });
-      } else {
-        this.$router.push({ name: "dwsqb" });
-      }
     },
     login() {
       this.$router.push({ name: "login" });

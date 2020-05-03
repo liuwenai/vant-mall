@@ -101,7 +101,7 @@ const routes = [{
     component: () => import('../view/my'),
     meta: {
       title: '个人信息',
-      login: true
+      // login: true
     }
   },
   

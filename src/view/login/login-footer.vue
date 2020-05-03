@@ -1,5 +1,5 @@
 <template>
-	<div class="text-desc text-center bottom_positon">技术支持: 中国医药教育协会</div>
+	<div class="text-desc text-center bottom_positon">技术支持: github.com/liuwenai</div>
 </template>
 
 <script>

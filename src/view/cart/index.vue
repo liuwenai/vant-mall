@@ -30,7 +30,6 @@
         <van-checkbox v-model="checked">全选</van-checkbox>
       </van-submit-bar> -->
     </div>
-    <!-- <BaseFooter active="cart" /> -->
     <BaseFooter />
   </div>
 </template>

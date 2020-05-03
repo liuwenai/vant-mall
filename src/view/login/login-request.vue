@@ -6,7 +6,7 @@
         icon="user-circle-o"
         placeholder="手机号"
         right-icon="close"
-        v-validate="'required|mobile'"
+        v-validate="'required'"
         name="user"
         data-vv-as="手机号"
         @right-click="clearText"
@@ -26,7 +26,7 @@
 
       <div class="clearfix">
         <div class="float-r">
-          <router-link to="/login/forget">忘记密码</router-link>
+          <!-- <router-link to="/login/forget">忘记密码</router-link> -->
         </div>
       </div>
 
@@ -38,13 +38,13 @@
         <router-link to="/login/registerLogon">用户注册</router-link>
       </div>
       <div class="float-r">
-        <router-link to="/login/registerGetCode">用户认证</router-link>
+          <router-link to="/login/forget">忘记密码</router-link>
       </div>
     </div>
 
-    <van-popup v-model="showKefu">
+    <!-- <van-popup v-model="showKefu">
       <md-kefu mobile="15839334498" />
-    </van-popup>
+    </van-popup> -->
   </div>
 </template>
 
@@ -54,6 +54,7 @@ import fieldGroup from "@/components/field-group/";
 import md_kefu from "@/components/md-kefu/";
 
 import { login, userinfo } from "@/api/member";
+import { AccountLogin }  from "@/api/mall";
 import { setLocalStorage } from "@/core/utils/local-storage";
 import { emailReg, mobileReg } from "@/core/regexp";
 import cookies from "@/core/utils/cookies";
@@ -69,11 +70,10 @@ export default {
   },
   data() {
     return {
-      type: "1", // 会员类型 0:个人会员，1：单位会员
       account: "",
       password: "",
       visiblePass: false,
-      showKefu: false,
+      // showKefu: false,
       isLogining: false
     };
   },
@@ -101,20 +101,18 @@ export default {
     async login() {
       const loginData = this.getLoginData();
       // 注意这里要优化判断登录是否成功
-      const { access_token, username, name, type } = await login(loginData);
+      const { access_token, userzh, usermc } = await AccountLogin(loginData);
       cookies.set("token", access_token);
       setLocalStorage({
         Authorization: access_token,
-        user_id: username,
-        nick_name: name,
-        type
+        user_id: userzh,
+        nick_name: usermc,
       });
-      this.type = type;
       // 把用户信息放入全局变量
       this.$eventBus["loginUser"] = {
         Authorization: access_token,
-        user_id: username,
-        nick_name: name
+        user_id: userzh,
+        nick_name: usermc,
       };
     },
 
@@ -123,7 +121,7 @@ export default {
       try {
         await this.validate();
         await this.login();
-        await this.getUserProfile();
+        // await this.getUserProfile();
         this.isLogining = false;
       } catch (err) {
         // console.log(err);
@@ -152,7 +150,7 @@ export default {
     routerRedirect() {
       const { query } = this.$route;
       this.$router.replace({
-        name: query.redirect || "home",
+        name: "home",
         query: query
       });
     },
@@ -168,7 +166,7 @@ export default {
     },
 
     getUserType(account) {
-      return "username";
+      return "userzh";
       // const accountType = mobileReg.test(account)
       //   ? 'mobile'
       //   : emailReg.test(account)

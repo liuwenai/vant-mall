@@ -1,26 +1,16 @@
 <template>
   <md-field-group class="register_submit">
-    <div>会员注册</div>
-    <!-- <van-row>
-      <van-col :span="12">
-        <van-cell title="个人" clickable @click="ftype = '1'">
-          <van-radio slot="right-icon" name="1" />
-        </van-cell>
-      </van-col>
-      <van-col :span="12">
-        22
-      </van-col>
-    </van-row>-->
-    <van-radio-group v-model="type" @change="onChange">
-      <van-cell-group>
-        <van-cell title="个人" clickable>
-          <van-radio slot="right-icon" name="1" />
-        </van-cell>
-        <van-cell title="单位" clickable>
-          <van-radio slot="right-icon" name="2" />
-        </van-cell>
-      </van-cell-group>
-    </van-radio-group>
+    <div>用户注册</div>
+    
+    <md-field
+      required
+      v-model="fzh"
+      v-validate="'required|fzh'"
+      data-vv-as="手机号"
+      name="fzh"
+      icon="manager"
+      placeholder="账号"
+    />
     <md-field
       required
       v-validate="'required'"
@@ -28,7 +18,7 @@
       v-model="name"
       name="name"
       icon="user-o"
-      :placeholder="fmc"
+      placeholder="用户名"
     />
     <md-field
       required
@@ -66,7 +56,7 @@
       name="password"
       @right-click="visiblePass = !visiblePass"
     />
-    <md-field
+    <!-- <md-field
       v-model="repeatPassword"
       icon="lock"
       placeholder="请再次确认密码"
@@ -76,26 +66,7 @@
       data-vv-as="确认密码"
       name="confirmpassword"
       @right-click="visiblePass = !visiblePass"
-    />
-    <!-- <md-field
-      v-model="password"
-      name="password"
-      v-validate="'required'"
-      data-vv-as="请输入密码"
-      icon="lock"
-      placeholder="请输入密码"
-      
-    />
-    <md-field
-      name="repeatPassword"
-      v-validate="'required'"
-      data-vv-as="请再次确认密码"
-      v-model="repeatPassword"
-      icon="lock"
-      placeholder="请再次确认密码"
-              @right-click="visiblePass = !visiblePass"
-
-    />-->
+    /> -->
 
     <div class="register_submit_btn">
       <van-button type="danger" size="large" @click="registerSubmit">确定</van-button>
@@ -118,7 +89,7 @@ import {
   Cell,
   CellGroup
 } from "vant";
-import { usercheck, usersave, userbind, registerCode } from "@/api/member";
+import { usersave } from "@/api/mall";
 
 export default {
   components: {
@@ -133,14 +104,13 @@ export default {
   data() {
     return {
       visiblePass: false,
-      fmc: "姓名",
-      type: "1",
+      fzh: "",
+      fmc: "用户名",
       name: "",
       mobile: "",
       counting: true,
       smscode: "",
       password: "",
-      repeatPassword: "",
       time: 60 * 1000
     };
   },
@@ -161,10 +131,9 @@ export default {
         await this.validate();
         // await this.bind();
         let params = {
-          type: this.type,
-          name: this.name,
-          mobile: this.mobile,
-          code: this.smscode,
+          userzh: this.fzh,
+          usermc: this.name,
+          phone: this.mobile,
           password: this.password
         };
         usersave(params).then(response => {
@@ -174,7 +143,7 @@ export default {
               name: "registerStatus",
               params: {
                 status: "success",
-                mobile: this.mobile,
+                phone: this.mobile,
                 password: this.password
               }
             }); // this.isLogining = false;
@@ -194,16 +163,16 @@ export default {
         // this.isLogining = false;
       }
     },
-    async check() {
-      const name = this.name;
-      const mobile = this.mobile;
-      const { code, msg, data = {} } = await usercheck(name, mobile);
-      if (code === -100) {
-        // debugger;
-        Toast(msg);
-        throw new Error(`用户验证: ${msg}`);
-      }
-    },
+    // async check() {
+    //   const name = this.name;
+    //   const mobile = this.mobile;
+    //   const { code, msg, data = {} } = await usercheck(name, mobile);
+    //   if (code === -100) {
+    //     // debugger;
+    //     Toast(msg);
+    //     throw new Error(`用户验证: ${msg}`);
+    //   }
+    // }
     async getCode() {
       this.counting = false;
       try {
@@ -229,26 +198,6 @@ export default {
     onFinish() {
       this.counting = true;
     },
-    async bind() {
-      const { name, mobile } = this.$route.params;
-      const smscode = this.smscode;
-      const password = this.password;
-      const params = { name, mobile, code: smscode, password };
-      const { code, msg } = await userbind(params);
-      if (code === -100) {
-        Toast(msg);
-        throw new Error(`用户验证: ${msg}`);
-      }
-    },
-    onChange(v) {
-      // debugger
-      this.type = v;
-      if (v === "2") {
-        this.fmc = "单位名称";
-      } else {
-        this.fmc = "姓名";
-      }
-    }
   }
 };
 </script>
