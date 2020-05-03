@@ -9,11 +9,11 @@
     <van-cell-group>
       <van-cell>
         <div class="goods-title">{{ book.title }}</div>
-        <div class="goods-price">{{ book.price }}</div>
+        <div class="goods-price">¥{{ numberFormatter(book.price) }}</div>
       </van-cell>
       <van-cell class="goods-express">
-        <van-col span="10">运费：{{ book.express }}</van-col>
-        <van-col span="14">剩余：{{ book.kcsl }}</van-col>
+        <van-col span="10">运费：{{ book.express }}元</van-col>
+        <van-col span="14">剩余：{{ book.kcsl }}本</van-col>
       </van-cell>
     </van-cell-group>
 
@@ -48,12 +48,19 @@
 
     <van-sku
       v-model="showBase"
-      :sku="skuDate.sku"
-      :goods="skuDate.goods"
-      :goods-id="skuDate.goods.id"
-      :quota="quota"
-      :quota-used="quotaUsed"
-      :hide-stock="hide_stock"
+      :sku="skuData.sku"
+      :goods="skuData.goods_info"
+      :goods-id="skuData.goods_id"
+      :hide-stock="skuData.sku.hide_stock"
+      :quota="skuData.quota"
+      :quota-used="skuData.quota_used"
+      :start-sale-num="skuData.start_sale_num"
+      :close-on-click-overlay="closeOnClickOverlay"
+      :properties="skuData.properties"
+      disable-stepper-input
+      reset-stepper-on-hide
+      safe-area-inset-bottom
+      reset-selected-sku-on-hide
       @buy-clicked="onBuyClicked"
       @add-cart="onAddCartClicked"
     />
@@ -75,7 +82,8 @@ import {
   GoodsActionButton,
   Sku,
 } from 'vant'
-import { bookshow } from '@/api/mall'
+import { booklist } from '@/api/mall'
+import format from 'number-format.js'
 
 export default {
   components: {
@@ -95,16 +103,44 @@ export default {
   data() {
     return {
       showBase: false,
-      quota: 3,
-      quotaUsed: 0,
-      hide_stock: false,
-      skuDate:{
-        goods:{
-          id:""
+      showCustom: false,
+      showStepper: false,
+      showSoldout: false,
+      closeOnClickOverlay: true,
+      customSkuValidator: () => '请选择xxx',
+      skuData: {
+        goods_id: '',
+        quota: 3,
+        quota_used: 0,
+        start_sale_num: 1,
+        goods_info: {
+          title: '',
+          picture:
+            'https://img.yzcdn.cn/upload_files/2017/03/16/Fs_OMbSFPa183sBwvG_94llUYiLa.jpeg?imageView2/2/w/100/h/100/q/75/format/jpg',
+          price: 1,
         },
-        sku: {}
+        sku: {
+          price: '',
+          stock_num: '',
+          none_sku: false,
+          hide_stock: false,
+          collection_id: 2261,
+          tree: [],
+          list: [],
+          messages: [],
         },
-      book: [],
+      },
+      initialSku: {
+        s1: '30349',
+        s2: '1193',
+        selectedNum: 3,
+        selectedProp: {
+          123: [1222],
+          133: [1244],
+          124: [1225, 1226],
+        },
+      },
+      book: {},
       goods: {
         thumb: [
           'https://img.yzcdn.cn/public_files/2017/10/24/e5a5a02309a41f9f5def56684808d9ae.jpeg',
@@ -114,22 +150,25 @@ export default {
     }
   },
   mounted() {
-    this.load(),
-    this.loadSku()
+    this.load()
   },
   methods: {
     load() {
       const fid = this.$route.params.id
-      bookshow(fid).then((response) => {
-        this.book = response.book
+      booklist().then((response) => {
+        const { code, books, msg } = response
+        for(let i = 0;i < books.length;i++){
+          if(books[i].id === fid){
+            this.book = books[i]
+          }
+          this.skuData.goods_id = this.book.id
+          this.skuData.sku.price = this.book.price
+          this.skuData.sku.stock_num = this.book.kcsl
+        }
       })
     },
-    loadSku(){
-      
-        
-      },
-    formatPrice() {
-      return '¥' + (this.goods.price / 100).toFixed(2)
+    numberFormatter(value) {
+      return format('#,##0.00', value)
     },
     addCart() {
       this.showBase = true

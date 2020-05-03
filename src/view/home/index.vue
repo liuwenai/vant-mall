@@ -21,9 +21,8 @@
       </div>
       <div class="item2">
         <div>书名：{{ book.title }}</div>
-        <div>作者：</div>
-        <div>简介：</div>
-        <div>加个：</div>
+        <div>作者：{{ book.author.name}}</div>
+        <div>价格：{{ book.price }}</div>
       </div>
     </div>
 
