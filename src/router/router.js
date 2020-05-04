@@ -81,8 +81,8 @@ const routes = [{
     }
   },
   {
-    name: 'news',
-    component: () => import('../view/user/news'),
+    name: 'serve',
+    component: () => import('../view/user/serve'),
     meta: {
       title: '客服',
     }

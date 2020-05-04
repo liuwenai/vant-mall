@@ -34,7 +34,7 @@
 
     <van-cell-group>
       <van-cell icon="gift-o" title="收货地址" to="address" is-link />
-      <van-cell icon="service-o" title="我的客服" to="news" is-link />
+      <van-cell icon="service-o" title="我的客服" to="serve" is-link />
       <van-cell icon="setting-o" title="设置" to="setting" is-link />
     </van-cell-group>
 

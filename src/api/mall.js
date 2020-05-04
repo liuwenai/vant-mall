@@ -1,7 +1,7 @@
 
 
 /**
- * 会员接口
+ * 
  */
 
 import axios from "./axios";
@@ -40,12 +40,11 @@ export const usersave = params => {
   return axios.get(`${prefix}user/save/`, params)
 }
 
+//订单
 
-
-// // 登录接口
-// export const login = params => {
-//   return axios.post(`${prefix}login`, params);
-// };
+export const itemordersave = params => {
+  return axios.get(`${prefix}itemorder/save/`, params)
+}
 
 
 
