@@ -66,8 +66,12 @@ export default {
               id: item.id,
               name: item.name,
               tel: item.tel,
-              address: item.province + item.city + item.county + " " + item.addressDetail
+              address: item.province + item.city + item.county + " " + item.addressDetail,
+              isDefault: item.default
             })
+            if(item.default === true){
+              this.chosenAddressId = item.id
+            }
           }
         }
       })
@@ -77,7 +81,7 @@ export default {
     },
     onEdit(item, index) {
       debugger
-      this.$router.push({ name: 'editaddress', query: { addressId: item.id } })
+      this.$router.push({ name: 'editaddress', query: { addressId: item.id} })
     },
   },
   onClickLeft() {

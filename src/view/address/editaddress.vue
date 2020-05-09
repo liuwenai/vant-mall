@@ -41,7 +41,7 @@ export default {
       areaList,
       addressId: 0,
       AddressInfo: {},
-      areaCode:"",
+      default:"",
     }
   },
   created() {
@@ -58,6 +58,7 @@ export default {
     async init() {
       addressshow({ id: this.addressId }).then((res) => {
         this.AddressInfo = res.row
+        this.AddressInfo.isDefault = res.row.default
         debugger
         // this.AddressInfo.areaCode = area.county_list.keys(res.row.county)
         for(let i in area.county_list){
@@ -69,14 +70,17 @@ export default {
     },
     onSave(content) {
       const infoData = getLocalStorage('user_id')
+      const bdefault = content.isDefault
       if (content.id != null) {
         debugger
+        content.default = bdefault
         addressupdate(content).then((res) => {
           this.$toast('成功')
           this.$router.go(-1)
         })
       } else {
         content.user = { id: infoData.user_id }
+        content.default = bdefault
         addresssave(content).then((res) => {
           this.$toast('成功')
           this.$router.go(-1)
