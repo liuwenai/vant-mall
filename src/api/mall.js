@@ -28,23 +28,27 @@ export const bookshow = id => {
 };
 
 //用户
-export const usershow = () => {
+export const usershow = params => {
   return axios.get(`${prefix}user/show/${params.id}`);
 };
 
 export const userupdate = params => {
-  return axios.put(`${prefix}user/update`, params)
+  return axios.post(`${prefix}user/update`, params)
 }
 
 
+export const userdelete = params => {
+  return axios.post(`${prefix}user/delete/${params.id}`)
+}
+
 export const usersave = params => {
-  return axios.get(`${prefix}user/save/`, params)
+  return axios.post(`${prefix}user/save`, params)
 }
 
 //订单
 
 export const itemordersave = params => {
-  return axios.get(`${prefix}itemorder/save/`, params)
+  return axios.post(`${prefix}itemorder/save`, params)
 }
 
 //地址

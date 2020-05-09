@@ -24,14 +24,14 @@
       required
       ref="mobile"
       v-model="mobile"
-      v-validate="'required|mobile'"
+      v-validate="{is:fzh}"
       data-vv-as="手机号"
       name="mobile"
       icon="phone-o"
       placeholder="手机号"
     />
 
-    <md-field
+    <!-- <md-field
       v-model="smscode"
       name="smscode"
       data-vv-as="请输入验证码"
@@ -40,11 +40,10 @@
       placeholder="请输入验证码"
     >
       <div slot="rightIcon" class="getCode red">
-        <!-- <template slot-scope="props">{{ +props.seconds || 60 }}秒后获取</template> -->
         <span v-if="counting" @click="getCode">获取验证码</span>
         <van-count-down v-else ref="countDown" :time="time" format="ss 秒后获取" @finish="onFinish" />
       </div>
-    </md-field>
+    </md-field> -->
     <md-field
       v-model="password"
       icon="lock"
@@ -56,7 +55,7 @@
       name="password"
       @right-click="visiblePass = !visiblePass"
     />
-    <!-- <md-field
+    <md-field
       v-model="repeatPassword"
       icon="lock"
       placeholder="请再次确认密码"
@@ -66,7 +65,7 @@
       data-vv-as="确认密码"
       name="confirmpassword"
       @right-click="visiblePass = !visiblePass"
-    /> -->
+    />
 
     <div class="register_submit_btn">
       <van-button type="danger" size="large" @click="registerSubmit">确定</van-button>
@@ -111,6 +110,7 @@ export default {
       counting: true,
       smscode: "",
       password: "",
+      repeatPassword:"",
       time: 60 * 1000
     };
   },
@@ -128,14 +128,28 @@ export default {
     async registerSubmit() {
       // 验证
       try {
-        await this.validate();
         // await this.bind();
+        
+        if(this.fzh !== this.mobile){
+        this.$toast('账号与手机号一致哦~')     
+        this.fzh = ''
+        this.mobile = ''
+        return
+        }
+        if(this.password !== this.repeatPassword){
+        this.$toast('密码不一致，请重新输入')     
+        this.password = ''
+        this.repeatPassword = ''
+        return
+        }
+        await this.validate();
         let params = {
           userzh: this.fzh,
           usermc: this.name,
           phone: this.mobile,
           password: this.password
         };
+        debugger
         usersave(params).then(response => {
           const { code, msg, data = {} } = response;
           if (code === 100) {
@@ -162,42 +176,7 @@ export default {
         console.log(err);
         // this.isLogining = false;
       }
-    },
-    // async check() {
-    //   const name = this.name;
-    //   const mobile = this.mobile;
-    //   const { code, msg, data = {} } = await usercheck(name, mobile);
-    //   if (code === -100) {
-    //     // debugger;
-    //     Toast(msg);
-    //     throw new Error(`用户验证: ${msg}`);
-    //   }
-    // }
-    async getCode() {
-      this.counting = false;
-      try {
-        const vv = await this.$validator.validate("mobile", this.mobile);
-        if (!vv) {
-          this.counting = true;
-          // this.$refs.mobile.focus()
-          this.$refs.countDown.reset();
-          const msg = this.errors.items[0].msg;
-          Notify(msg);
-          throw new Error(msg);
-        }
-        registerCode(this.mobile).then(response => {
-          const { code, msg } = response;
-          if (code === 100) {
-            Notify("验证码发送成功，注意查收！");
-          }
-        });
-      } catch (err) {
-        console.log(err);
-      }
-    },
-    onFinish() {
-      this.counting = true;
-    },
+    }
   }
 };
 </script>

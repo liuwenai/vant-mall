@@ -49,7 +49,7 @@ Validator.extend("mobile", {
 });
 
 Validator.extend("fzh", {
-  getMessage: () => `账号是您的手机号`,
+  getMessage: () => `账号是您的手机号，并且请输入正确的手机号码`,
   validate: value =>
     value.length === 11 &&
     /^(((13[0-9]{1})|(14[57]{1})|(15[012356789]{1})|(17[03678]{1})|(18[0-9]{1})|(19[89]{1})|(16[6]{1}))+\d{8})$/.test(

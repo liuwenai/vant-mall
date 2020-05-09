@@ -4,11 +4,11 @@
       <md-field
         v-model="username"
         icon="user-circle-o"
-        placeholder="手机号"
+        placeholder="账号"
         right-icon="close"
         v-validate="'required'"
         name="user"
-        data-vv-as="手机号"
+        data-vv-as="账号"
         @right-click="clearText"
       />
 
@@ -38,7 +38,7 @@
         <router-link to="/login/registerLogon">用户注册</router-link>
       </div>
       <div class="float-r">
-          <router-link to="/login/forget">忘记密码</router-link>
+          <router-link to="/login/forget/reset">忘记密码</router-link>
       </div>
     </div>
 

@@ -2,23 +2,27 @@
   <div>
     <van-nav-bar title="账户与安全" left-arrow @click-left="onClickLeft" />
     <div style="width: 100%;margin-top: 10px;">
-      <van-cell title="账号" :value="username" />
-      <van-cell title="用户名" :value="usermc" />
-      <van-cell title="绑定电话" :value="fmobile" />
+      <van-cell-group>
+        <van-field label="账号" readonly :value="username" />
+        <van-field label="用户名" :value="usermc" />
+        <van-field label="绑定电话" readonly :value="fmobile" />
+        <van-field label="密码"  :value="password" />
+      </van-cell-group>
     </div>
   </div>
 </template>
 
 <script>
-import { CellGroup, Cell, NavBar, Button, Popup } from 'vant'
+import { Field, CellGroup, Cell, NavBar, Button, Popup } from 'vant'
 import { removeLocalStorage, getLocalStorage } from '@/core/utils/local-storage'
-import { userlist } from '@/api/mall'
+import { userlist, usershow } from '@/api/mall'
 
 export default {
   name: 'payment',
   components: {
     [CellGroup.name]: CellGroup,
     [Cell.name]: Cell,
+    [Field.name]: Field,
     [NavBar.name]: NavBar,
     [Button.name]: Button,
     [Popup.name]: Popup,
@@ -29,6 +33,7 @@ export default {
       username: '',
       usermc: '',
       fmobile: '',
+      password: '',
     }
   },
   mounted() {
@@ -37,23 +42,13 @@ export default {
   },
   methods: {
     async load() {
-      const infoData = await getLocalStorage(
-        'user_id',
-        'Authorization',
-        'nick_name',
-        'background_image',
-        'avatar'
-      )
-      userlist().then((res) => {
-        const { rows } = res
-        debugger
-        for (let i = 0; i < rows.length; i++) {
-          if (rows[i].id == infoData.user_id) {
-            this.username = rows[i].userzh
-            this.usermc = rows[i].usermc
-            this.fmobile = rows[i].phone
-          }
-        }
+      const infoData = await getLocalStorage('user_id')
+      usershow({ id: infoData.user_id }).then((res) => {
+        const { row } = res
+        this.username = row.userzh
+        this.usermc = row.usermc
+        this.fmobile = row.phone
+        this.password = row.password
       })
     },
     onClickLeft() {
