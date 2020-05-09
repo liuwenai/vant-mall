@@ -117,7 +117,7 @@ export default {
 <style lang="less" scoped>
 .container {
   height: 100px;
-  width: 100%;
+  width: 95%;
   display: flex;
   flex-direction: row;
   border: 10px;

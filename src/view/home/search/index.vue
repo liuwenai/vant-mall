@@ -34,7 +34,7 @@
 
 <script>
 import { Card, Search, Tag, List } from 'vant';
-// import { goodsList } from '@/api/api';
+import { booklist } from '@/api/mall';
 import IsEmpty from '@/components/is-empty/';
 
 export default {
@@ -97,7 +97,7 @@ export default {
       return false;
     },
     searchGoods() {
-      goodsList({
+      booklist({
         keyword: this.keyword,
         page: this.page,
         limit: this.limit,

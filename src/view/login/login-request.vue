@@ -2,7 +2,7 @@
   <div>
     <md-field-group>
       <md-field
-        v-model="account"
+        v-model="username"
         icon="user-circle-o"
         placeholder="手机号"
         right-icon="close"
@@ -53,8 +53,8 @@ import field from "@/components/field/";
 import fieldGroup from "@/components/field-group/";
 import md_kefu from "@/components/md-kefu/";
 
-import { login, userinfo } from "@/api/member";
-import { AccountLogin }  from "@/api/mall";
+// import { login, userinfo } from "@/api/member";
+import { login }  from "@/api/mall";
 import { setLocalStorage } from "@/core/utils/local-storage";
 import { emailReg, mobileReg } from "@/core/regexp";
 import cookies from "@/core/utils/cookies";
@@ -70,7 +70,7 @@ export default {
   },
   data() {
     return {
-      account: "",
+      username: "",
       password: "",
       visiblePass: false,
       // showKefu: false,
@@ -79,14 +79,14 @@ export default {
   },
   mounted() {
     // debugger;
-    const {mobile,password} = this.$route.params
-    this.account = mobile;
+    const {userzh,password} = this.$route.params
+    this.username = userzh;
     this.password = password;
   },
 
   methods: {
     clearText() {
-      this.account = "";
+      this.username = "";
     },
 
     async validate() {
@@ -99,21 +99,28 @@ export default {
     },
 
     async login() {
-      const loginData = this.getLoginData();
-      // 注意这里要优化判断登录是否成功
-      const { access_token, userzh, usermc } = await AccountLogin(loginData);
+      const username = this.username;
+      const password = this.password;
+      const loginData = { username,password };
+    // 注意这里要优化判断登录是否成功
+      const { access_token, user } = await login(loginData);
+        debugger
       cookies.set("token", access_token);
       setLocalStorage({
         Authorization: access_token,
-        user_id: userzh,
-        nick_name: usermc,
+        nick_name: user.usermc,
+        username: user.userzh,
+        user_id: user.id,
+        login:true,
+        user: user
       });
       // 把用户信息放入全局变量
-      this.$eventBus["loginUser"] = {
-        Authorization: access_token,
-        user_id: userzh,
-        nick_name: usermc,
-      };
+      // this.$eventBus["loginUser"] = {
+      //   Authorization: access_token,
+      //   user_id: id,
+      //   nick_name: usermc,
+      // };
+      this.routerRedirect();
     },
 
     async loginSubmit() {
@@ -129,50 +136,35 @@ export default {
       }
     },
 
-    // 根据 type 分取是个人信息还是单位信息
-    async getUserProfile() {
-      const { code, data } = await userinfo();
-      // debugger;
-      // 设置额外的信息
-      if (code === 100) {
-        // window.localStorage.setItem("id", data.id);
-        setLocalStorage({
-          id: data.id
-        });
-      } else {
-        this.$router.push({ name: "member" });
-        return;
-      }
-
-      this.routerRedirect();
-    },
 
     routerRedirect() {
-      const { query } = this.$route;
-      this.$router.replace({
-        name: "home",
-        query: query
-      });
+      // const { query } = this.$route;
+      // this.$router.replace({
+      //   name: "home",
+      //   query: query
+      // });
+      window.location = '#/user/';
     },
 
-    getLoginData() {
-      const password = this.password;
-      const account = this.getUserType(this.account);
-      return {
-        [account]: this.account,
-        password,
-        usertype: 0
-      };
-    },
+    // getLoginData() {
+    //   const password = this.password;
+    //   const username = this.getUserType(this.username);
+    //   return {
+    //     [username]: this.username,
+    //     password,
+    //     usertype: 0
+    //   };
+    // },
 
-    getUserType(account) {
-      return "userzh";
-      // const accountType = mobileReg.test(account)
+    getUserType(username) {
+      debugger
+      return username;
+      // const usernameType = mobileReg.test(username)
       //   ? 'mobile'
-      //   : emailReg.test(account)
+      //   : emailReg.test(username)
       //     ? 'email'
       //     : 'username';
-      // return accountType;
+      // return usernameType;
     }
   }
 };

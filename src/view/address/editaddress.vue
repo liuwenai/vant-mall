@@ -4,7 +4,8 @@
     <van-address-edit
       style="background-color: #fff;"
       :areaList="areaList"
-      :addressInfo="addressInfo"
+      :address-info="AddressInfo"
+      show-area
       show-set-default
       show-delete
       @save="onSave"
@@ -14,47 +15,82 @@
 </template>
 
 <script>
-import { Toast } from "vant";
-import { AddressEdit, NavBar } from "vant";
-import areaList from "../address/area";
-import { removeLocalStorage } from "@/core/utils/local-storage";
+import { Toast } from 'vant'
+import { AddressEdit, NavBar } from 'vant'
+import areaList from '../address/area'
+import {
+  addresslist,
+  addressupdate,
+  addresssave,
+  addressdelete,
+  addressshow,
+} from '@/api/mall'
+import { getLocalStorage } from '@/core/utils/local-storage'
+import { removeLocalStorage } from '@/core/utils/local-storage'
+import types from "../../mix/types";
+import area from '../address/area'
+
 export default {
   components: {
     [AddressEdit.name]: AddressEdit,
-    [NavBar.name]: NavBar
+    [NavBar.name]: NavBar,
   },
+  mixins: [types],
   data() {
     return {
       areaList,
       addressId: 0,
-      addressInfo: {}
-    };
-  },
-  created() {
-    this.addressId = this.$route.query.addressId;
-    if (this.addressId !== -1 && this.addressId !== 0) {
-      this.init();
+      AddressInfo: {},
+      areaCode:"",
     }
   },
+  created() {
+    this.addressId = this.$route.query.addressId
+    this.address = this.$route.query.address
+    if (this.addressId !== -1 && this.addressId !== 0) {
+      this.init()
+    }
+  },
+  mounted() {
+    this.init()
+  },
   methods: {
-    init() {
-      addressDetail({id: this.addressId}).then(res => {
-        this.addressInfo = res.data.data;
-      });
+    async init() {
+      addressshow({ id: this.addressId }).then((res) => {
+        this.AddressInfo = res.row
+        debugger
+        // this.AddressInfo.areaCode = area.county_list.keys(res.row.county)
+        for(let i in area.county_list){
+          if(area.county_list[i] === res.row.county){
+            this.AddressInfo.areaCode = i
+          }
+        }
+      })
     },
     onSave(content) {
-      addressSave(content).then(res => {
-        this.$toast('成功');
-        this.$router.go(-1);
-      });
+      const infoData = getLocalStorage('user_id')
+      if (content.id != null) {
+        debugger
+        addressupdate(content).then((res) => {
+          this.$toast('成功')
+          this.$router.go(-1)
+        })
+      } else {
+        content.user = { id: infoData.user_id }
+        addresssave(content).then((res) => {
+          this.$toast('成功')
+          this.$router.go(-1)
+        })
+      }
     },
     onDelete(content) {
-      addressDelete({ id: content.id });
-      removeLocalStorage('AddressId')
-      this.$router.go(-1);
+      addressdelete({ id: content.id }).then((res) => {
+          this.$toast('删除成功')
+          this.$router.go(-1)
+        })
     },
-  }
-};
+  },
+}
 </script>
 
 <style>

@@ -1,6 +1,6 @@
 <template>
   <div class="tabber-user">
-    <div class="avatar" v-if="isLogin">
+    <div class="avatar" v-if="!isLogin">
       <img :src="avatar" alt srcset />
       <p @click="login">去登录</p>
     </div>
@@ -33,7 +33,7 @@
     </van-cell-group>
 
     <van-cell-group>
-      <van-cell icon="gift-o" title="收货地址" to="address" is-link />
+      <van-cell icon="gift-o" title="收货地址"  @click="toAddress" is-link />
       <van-cell icon="service-o" title="我的客服" to="serve" is-link />
       <van-cell icon="setting-o" title="设置" to="setting" is-link />
     </van-cell-group>
@@ -72,7 +72,8 @@ export default {
       isLogin: false,
       background_image: "",
       nick_name: "",
-      avatar: ""
+      avatar: "",
+      infoData:[]
     };
   },
   mounted() {
@@ -82,7 +83,6 @@ export default {
     loginOut() {
       removeLocalStorage(
         "Authorization",
-        "id",
         "user_id",
         "avatar",
         "background_image",
@@ -91,20 +91,26 @@ export default {
       this.$router.push({ name: "login" });
     },
     async getUserInfo() {
-      const infoData = await getLocalStorage(
-        "user_id",
+      this.infoData = await getLocalStorage(
         "Authorization",
         "nick_name",
+        "user_id",
         "background_image",
         "avatar",
+        "login"
       );
-      this.isLogin = infoData.user_id !== "" || false;
-      this.nick_name = infoData.nick_name || "昵称";
-      this.avatar = infoData.avatar || avatar_default;
-      this.background_image = infoData.background_image || bg_default;
+      debugger
+      this.isLogin = this.infoData.login !== "";
+      this.nick_name = this.infoData.nick_name || "昵称";
+      this.avatar = this.infoData.avatar || avatar_default;
+      this.background_image = this.infoData.background_image || bg_default;
     },
     login() {
       this.$router.push({ name: "login" });
+    },
+    toAddress(){
+      debugger
+      this.$router.push({ name: 'address', params: { id: this.infoData.user_id } })
     }
   }
 };

@@ -8,14 +8,15 @@ import axios from "./axios";
 const prefix = "";
 
 
-//登录
-export function AccountLogin (data) {
-  return request({
-    url: '/login',
-    method: 'post',
-    data
-  })
-}
+// 登录接口
+export const login = params => {
+  return axios.post(`${prefix}login`, params);
+};
+
+// 用户信息接口
+export const userlist = () => {
+  return axios.get(`${prefix}user/index`);
+};
 
 // 书籍
 export const booklist = () => {
@@ -46,7 +47,27 @@ export const itemordersave = params => {
   return axios.get(`${prefix}itemorder/save/`, params)
 }
 
+//地址
 
+export const addresslist = () => {
+  return axios.get(`${prefix}address/index`)
+}
+
+export const addressupdate = (params) => {
+  return axios.post(`${prefix}address/update`, params)
+}
+
+export const addressdelete = (params) => {
+  return axios.post(`${prefix}address/delete/${params.id}`)
+}
+
+export const addresssave = (params) => {
+  return axios.post(`${prefix}address/save`, params)
+}
+
+export const addressshow = (params) => {
+  return axios.get(`${prefix}address/show/${params.id}`)
+}
 
 
 

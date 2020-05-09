@@ -13,56 +13,77 @@
 
 <script>
 //接口问题，登录显示问题
-import { Toast } from "vant";
-import { AddressEdit, NavBar, AddressList } from "vant";
+import { Toast } from 'vant'
+import { AddressEdit, NavBar, AddressList } from 'vant'
+import {
+  addresslist,
+  addressupdate,
+  addresssave,
+  addressdelete,
+} from '@/api/mall'
+import { getLocalStorage } from "@/core/utils/local-storage";
+
 export default {
   components: {
     [AddressEdit.name]: AddressEdit,
     [AddressList.name]: AddressList,
-    [NavBar.name]: NavBar
+    [NavBar.name]: NavBar,
   },
   data() {
     return {
-      chosenAddressId: '1',
-      addressList: [
-        {
-          id: "1",
-          name: "张三",
-          tel: "13000000000",
-          address: "浙江省杭州市西湖区文三路 138 号东方通信大厦 7 楼 501 室"
-        },
-        {
-          id: "3",
-          name: "王五",
-          tel: "1320000000",
-          address: "浙江省杭州市滨江区江南大道 15 号"
-        }
-      ],
-      searchResult: []
-    };
-  },
-  mounted() {
-    this.getAddress();
-  },
-  methods: {
-    async getAddress() {
-      if (addressList.length > 0) {
-        this.isAddressList = true;
-      } else {
-        this.isAddressList = false;
-      }
-    },
-    onAdd() {
-      this.$router.push({ name: "editaddress", query: { addressId: -1 } });
-    },
-    onEdit(item, index) {
-      this.$router.push({ name: "editaddress", query: { addressId: item.id } });
+      chosenAddressId: -1,
+      addressList: [],
+      infoData: []
     }
   },
+  mounted() {
+    this.load()
+  },
+  methods: {
+    // async getAddress() {
+    //   if (addressList.length > 0) {
+    //     this.isAddressList = true;
+    //     this.load()
+    //   } else {
+    //     this.isAddressList = false;
+    //   }
+    // },
+    async load() {
+      this.infoData = await getLocalStorage(
+        "Authorization",
+        "nick_name",
+        "user_id",
+        "background_image",
+        "avatar",
+        "login"
+      );
+      addresslist().then((res) => {
+        const { rows } = res
+        for (var i = 0; i < rows.length; i++) {
+          var item = rows[i]
+          if (item.user.id == this.infoData.user_id) {
+            this.addressList.push({
+              id: item.id,
+              name: item.name,
+              tel: item.tel,
+              address: item.province + item.city + item.county + " " + item.addressDetail
+            })
+          }
+        }
+      })
+    },
+    onAdd() {
+      this.$router.push({ name: 'editaddress', query: { addressId: -1 } })
+    },
+    onEdit(item, index) {
+      debugger
+      this.$router.push({ name: 'editaddress', query: { addressId: item.id } })
+    },
+  },
   onClickLeft() {
-    this.$router.go(-1);
-  }
-};
+    this.$router.go(-1)
+  },
+}
 </script>
 
 <style>

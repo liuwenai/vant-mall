@@ -21,7 +21,10 @@ import {
   Button,
   Popup
 } from "vant";
-import { userinfo } from "@/api/member";
+import {
+  removeLocalStorage,
+  getLocalStorage
+} from "@/core/utils/local-storage";
 export default {
   name: "payment",
   components: {
@@ -34,20 +37,39 @@ export default {
   data() {
     return {
       addshowPop: false,
-      username: userinfo().username
+      username: ""
     };
   },
   mounted() {
     this.addshowPop = true;
+    this.load()
   },
   methods: {
+    async load() {
+      const infoData = await getLocalStorage(
+        "user_id",
+        "Authorization",
+        "nick_name",
+        "background_image",
+        "avatar",
+      );
+      debugger
+      this.username = infoData.nick_name;
+    },
     onClickLeft() {
       window.history.go(-1);
     },
     loginOut() {
-      localStorage.removeItem("user");
-      this.$router.push("/login");
-    }
+      removeLocalStorage(
+        "Authorization",
+        "id",
+        "user_id",
+        "avatar",
+        "background_image",
+        "nick_name"
+      );
+      this.$router.push({ name: "login" });
+    },
   }
 };
 </script>
