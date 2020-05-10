@@ -65,6 +65,13 @@ const routes = [{
       title: '我的订单',
     }
   },
+  {
+    name: 'ordercheck',
+    component: () => import('../view/order/ordercheck'),
+    meta: {
+      title: '订单详情',
+    }
+  },
 
   {
     name: 'setting',

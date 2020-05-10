@@ -171,12 +171,6 @@ export default {
         goodsId: data.goodsId,
         number: data.selectedNum
       };
-      // cartFastAdd(params).then(res => {
-      //   let cartId = res.data.data;
-      //   setLocalStorage({ CartId: cartId });
-      //   that.showBase = false;
-      //   this.$router.push('/order/checkout');
-      // });
     },
     onAddCartClicked(data) {
       let that = this;

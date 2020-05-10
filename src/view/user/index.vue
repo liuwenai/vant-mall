@@ -99,7 +99,6 @@ export default {
         "avatar",
         "login"
       );
-      debugger
       this.isLogin = this.infoData.login !== "";
       this.nick_name = this.infoData.nick_name || "昵称";
       this.avatar = this.infoData.avatar || avatar_default;
@@ -109,7 +108,6 @@ export default {
       this.$router.push({ name: "login" });
     },
     toAddress(){
-      debugger
       this.$router.push({ name: 'address', params: { id: this.infoData.user_id } })
     }
   }
