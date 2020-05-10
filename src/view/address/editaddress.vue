@@ -72,17 +72,16 @@ export default {
       const infoData = getLocalStorage('user_id')
       const bdefault = content.isDefault
       if (content.id != null) {
-        debugger
         content.default = bdefault
         addressupdate(content).then((res) => {
-          this.$toast('成功')
+          this.$toast('保存成功')
           this.$router.go(-1)
         })
       } else {
         content.user = { id: infoData.user_id }
         content.default = bdefault
         addresssave(content).then((res) => {
-          this.$toast('成功')
+          this.$toast('保存成功')
           this.$router.go(-1)
         })
       }

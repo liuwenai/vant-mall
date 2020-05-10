@@ -101,11 +101,12 @@ export default {
   methods: {
     load() {
       booklist().then((response) => {
-        const { code, books, msg } = response
-        this.books = books
+        const { code, rows, msg } = response
+        this.books = rows
       })
     },
     onDetailbook(data) {
+      debugger
       this.$router.push({ name: 'detailbook', params: { id: data.id } })
     },
     onSearch() {

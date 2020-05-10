@@ -23,9 +23,9 @@ export const booklist = () => {
   return axios.get(`${prefix}book/index`);
 };
 
-export const bookshow = id => {
-  return axios.get(`${prefix}book/index/${id}`);
-};
+export const bookshow = (params) => {
+  return axios.get(`${prefix}book/show/${params.id}`)
+}
 
 //用户
 export const usershow = params => {
@@ -47,7 +47,19 @@ export const usersave = params => {
 
 //订单
 
-export const itemordersave = params => {
+export const itemorderlist = () => {
+  return axios.get(`${prefix}itemorder/index`)
+}
+
+export const itemorderupdate = (params) => {
+  return axios.post(`${prefix}itemorder/update`, params)
+}
+
+export const itemorderdelete = (params) => {
+  return axios.post(`${prefix}itemorder/delete/${params.id}`)
+}
+
+export const itemordersave = (params) => {
   return axios.post(`${prefix}itemorder/save`, params)
 }
 
