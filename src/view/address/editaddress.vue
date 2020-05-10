@@ -85,6 +85,7 @@ export default {
           this.$router.go(-1)
         })
       }
+
     },
     onDelete(content) {
       addressdelete({ id: content.id }).then((res) => {

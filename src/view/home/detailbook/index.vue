@@ -34,11 +34,7 @@
 
     <van-goods-action>
       <van-goods-action-icon icon="chat-o" @click="toServe">客服</van-goods-action-icon>
-      <van-goods-action-icon
-        icon="cart-o"
-        @click="toCart"
-        :info="(cartInfo > 0) ? cartInfo : ''"
-      >购物车</van-goods-action-icon>
+      <van-goods-action-icon icon="cart-o" @click="toCart" :info="cartInfo > 0 ? cartInfo : ''">购物车</van-goods-action-icon>
       <van-goods-action-button type="warning" @click="skuClick">加入购物车</van-goods-action-button>
       <van-goods-action-button type="danger" @click="skuClick">立即购买</van-goods-action-button>
     </van-goods-action>
@@ -71,7 +67,7 @@ import {
   Sku,
   Popup
 } from "vant";
-import { bookshow, itemordersave } from "@/api/mall";
+import { bookshow, itemordersave, bookupdate } from "@/api/mall";
 import format from "number-format.js";
 import { getLocalStorage } from "@/core/utils/local-storage";
 
@@ -151,9 +147,10 @@ export default {
       //     this.skuData.sku.stock_num = this.book.kcsl
       //   }
       // })
+      let that = this;
       bookshow({ id: this.fid }).then(res => {
         const { row } = res;
-        this.book = row;
+        that.book = row;
         this.skuData.goods_id = row.id;
         this.skuData.sku.price = row.price;
         this.skuData.sku.stock_num = row.kcsl;
@@ -198,6 +195,11 @@ export default {
           duration: 1500
         });
         that.showBase = false;
+      });
+      that.book.kcsl = that.book.kcsl - data.selectedNum;
+      debugger;
+      bookupdate(that.book).then(res => {
+        that.load();
       });
       // this.$router.push({ name: 'cart', params: { id: data.id } })
     },

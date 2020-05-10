@@ -97,9 +97,7 @@ export default {
         }
       });
     },
-    onChange(value){
-debugger
-    }
+    
   }
 };
 </script>

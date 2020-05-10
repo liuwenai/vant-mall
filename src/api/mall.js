@@ -27,6 +27,10 @@ export const bookshow = (params) => {
   return axios.get(`${prefix}book/show/${params.id}`)
 }
 
+export const bookupdate = (params) => {
+  return axios.post(`${prefix}book/update`, params)
+}
+
 //用户
 export const usershow = params => {
   return axios.get(`${prefix}user/show/${params.id}`);
