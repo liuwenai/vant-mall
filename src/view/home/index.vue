@@ -106,7 +106,6 @@ export default {
       })
     },
     onDetailbook(data) {
-      debugger
       this.$router.push({ name: 'detailbook', params: { id: data.id } })
     },
     onSearch() {

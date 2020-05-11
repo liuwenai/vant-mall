@@ -51,6 +51,10 @@ export const usersave = params => {
 
 //订单
 
+export const mordersave = (params) => {
+  return axios.post(`${prefix}morder/save`, params)
+}
+
 export const itemorderlist = () => {
   return axios.get(`${prefix}itemorder/index`)
 }
@@ -67,6 +71,9 @@ export const itemordersave = (params) => {
   return axios.post(`${prefix}itemorder/save`, params)
 }
 
+export const itemordershow = (params) => {
+  return axios.get(`${prefix}itemorder/show/${params.id}`)
+}
 //地址
 
 export const addresslist = () => {

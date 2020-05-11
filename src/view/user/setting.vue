@@ -53,7 +53,6 @@ export default {
         "background_image",
         "avatar",
       );
-      debugger
       this.username = infoData.nick_name;
     },
     onClickLeft() {

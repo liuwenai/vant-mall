@@ -1,23 +1,37 @@
 <template>
   <div class="tab-cart">
     <div class="editor_head" v-show="goods.length">
-      <van-icon :name="isEditor ? 'success' : 'editor'" />
-      <span @click="isEditor = !isEditor">{{ isEditor ? '完成' : '编辑' }}</span>
+      <!-- <van-icon :name="isEditor ? 'success' : 'editor'" />
+      <span @click="isEditor = !isEditor">
+        {{
+        isEditor ? '完成' : '编辑'
+        }}
+      </span>-->
     </div>
     <van-checkbox-group v-model="checkedGoods" ref="checkboxGroup">
       <div v-for="(book, index) in goods" :key="index" class="card-goods__item">
         <van-checkbox :key="book.id" :name="book.id" v-model="book.checked"></van-checkbox>
-        <van-card
-          :key="book.id"
-          :title="book.title"
-          :price="book.price + '.00'"
-          :thumb="book.picUrl"
-        >
-          <div slot="footer">
-            <van-stepper v-model="book.num" async-change max="3" />
-          </div>
-        </van-card>
-        <div class="cart_delete" v-if="isEditor" @click="deleteCart(book.id)">删除</div>
+        <van-swipe-cell>
+          <van-card
+            :key="book.id"
+            :title="book.title"
+            :price="book.price + '.00'"
+            :thumb="book.picUrl"
+          >
+            <div slot="footer">
+              <van-stepper v-model="book.num" async-change max="3" />
+            </div>
+          </van-card>
+          <template #right>
+            <van-button
+              square
+              text="删除"
+              type="danger"
+              @click="deleteCart(book.id)"
+              class="delete-button"
+            />
+          </template>
+        </van-swipe-cell>
       </div>
     </van-checkbox-group>
     <is-empty v-if="!goods.length">您的购物车空空如也~</is-empty>
@@ -48,23 +62,29 @@ import {
   SubmitBar,
   Toast,
   NavBar,
-  Stepper
+  Stepper,
+  SwipeCell
 } from "vant";
 import { GoodsAction, GoodsActionIcon, GoodsActionButton } from "vant";
 import {
   itemorderlist,
   bookshow,
   itemorderupdate,
-  itemorderdelete
+  itemorderdelete,
+  mordersave,
+  addresslist,
+  usershow,
+  userlist
 } from "@/api/mall";
-import { getLocalStorage, setLocalStorage} from "@/core/utils/local-storage";
-import _ from 'lodash';
+import { getLocalStorage, setLocalStorage } from "@/core/utils/local-storage";
+import _ from "lodash";
 
 export default {
   components: {
     [GoodsAction.name]: GoodsAction,
     [GoodsActionIcon.name]: GoodsActionIcon,
     [GoodsActionButton.name]: GoodsActionButton,
+    [SwipeCell.name]: SwipeCell,
     [BaseFooter.name]: BaseFooter,
     [isEmpty.name]: isEmpty,
     [Button.name]: Button,
@@ -87,7 +107,8 @@ export default {
       goods: [],
       num: "",
       book: [],
-      infoData: []
+      infoData: [],
+      address: {}
     };
   },
   computed: {
@@ -110,13 +131,11 @@ export default {
   },
   methods: {
     load() {
-      let that = this;
-      that.infoData = getLocalStorage("user_id");
-      debugger
+      this.infoData = getLocalStorage("user_id");
       itemorderlist().then(res => {
         const { rows } = res;
         for (let i = 0; i < rows.length; i++) {
-          if (rows[i].user.id === parseInt(that.infoData.user_id)) {
+          if (rows[i].user.id == this.infoData.user_id) {
             bookshow({ id: rows[i].goodsId }).then(response => {
               const good = response.row;
               this.goods.push({
@@ -124,7 +143,7 @@ export default {
                 num: rows[i].number,
                 title: good.title,
                 price: good.price
-              });        
+              });
               this.allGoods = this.getAllList();
               this.checkedGoods = this.getCheckedList(this.goods);
             });
@@ -155,20 +174,54 @@ export default {
         this.checkedGoods = this.allGoods;
       }
     },
-    cartSubmit(){
-      debugger
+    cartSubmit() {
       let checkedGoods = this.checkedGoods;
-      // this.isSubmit = true;
-      // setLocalStorage({addresses:{id: 0}, CartId: 0, CouponId: 0});
-      this.$router.push({ name: 'ordercheck' })
+      let that = this;
+      const user_id = this.infoData.user_id;
+      userlist().then(res => {
+        const { rows } = res;
+        rows.forEach(item => {
+          if (item.id == user_id) {
+            let addresses = item.addresses;
+            if (addresses != null) {
+              addresses.forEach((item, index) => {
+                if (index === 0) {
+                  const checkorder = [];
+                  checkedGoods.forEach(item => {
+                    let order = { id: item };
+                    checkorder.push(order);
+                  });
+                  const parmas = {
+                    user: { id: user_id },
+                    address: { id: item.id },
+                    itemOrders: checkorder,
+                    fddje: this.totalPrice,
+                    fddzt: "1"
+                  };
+                  debugger
+                  mordersave(parmas).then(res => {
+
+                  });
+                }
+              });
+            } else {
+              this.$toast("您还没有地址，请先添加地址哦~");
+            }
+          }
+        });
+      });
+      // this.$router.push({
+      //   name: "ordercheck",
+      //   query: { checkedGoods: checkedGoods }
+      // });
+      debugger;
     },
     deleteCart(o) {
       itemorderdelete({ id: o }).then(res => {
-        debugger;
         this.$toast("删除成功");
         this.isEditor = false;
         this.goods = [];
-        this.load()
+        this.load();
       });
     }
   }
@@ -192,9 +245,9 @@ export default {
   align-items: center;
   margin-bottom: 10px;
   background-color: #fff;
-  .van_card {
-    width: 250px;
-  }
+}
+.van-swipe-cell {
+  width: 100%;
 }
 .cart_delete {
   background-color: #f2f2f2;
@@ -202,5 +255,8 @@ export default {
   padding: 0 10px;
   color: #fff;
   background-color: #db3d3c;
+}
+.delete-button {
+  height: 100%;
 }
 </style>

@@ -78,7 +78,7 @@ export default {
         userlist().then((res) => {
           const { rows } = res
           rows.forEach((items) => {
-            debugger
+            // debugger
             if (items.userzh === username) {
               items.password = password
               // const params = { username, password }

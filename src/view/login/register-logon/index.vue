@@ -149,7 +149,7 @@ export default {
           phone: this.mobile,
           password: this.password
         };
-        debugger
+        // debugger
         usersave(params).then(response => {
           const { code, msg, data = {} } = response;
           if (code === 100) {

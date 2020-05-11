@@ -104,7 +104,7 @@ export default {
       const loginData = { username,password };
     // 注意这里要优化判断登录是否成功
       const { access_token, user } = await login(loginData);
-        debugger
+        // debugger
       cookies.set("token", access_token);
       setLocalStorage({
         Authorization: access_token,
@@ -157,7 +157,7 @@ export default {
     // },
 
     getUserType(username) {
-      debugger
+      // debugger
       return username;
       // const usernameType = mobileReg.test(username)
       //   ? 'mobile'

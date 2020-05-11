@@ -180,7 +180,6 @@ export default {
         goodsId: data.goodsId,
         number: data.selectedNum
       };
-      debugger;
 
       itemordersave(params).then(() => {
         this.cartInfo = this.cartInfo + data.selectedNum;
@@ -191,10 +190,9 @@ export default {
         that.showBase = false;
       });
       that.book.kcsl = that.book.kcsl - data.selectedNum;
-      debugger;
-      bookupdate(that.book).then(res => {
-        that.load();
-      });
+      // bookupdate(that.book).then(res => {
+      //   that.load();
+      // });
       // this.$router.push({ name: 'cart', params: { id: data.id } })
     },
     toHome() {

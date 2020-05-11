@@ -7,37 +7,38 @@
       default-tag-text="默认"
       @add="onAdd"
       @edit="onEdit"
+      @select="onSelect"
     />
   </div>
 </template>
 
 <script>
 //接口问题，登录显示问题
-import { Toast } from 'vant'
-import { AddressEdit, NavBar, AddressList } from 'vant'
+import { Toast } from "vant";
+import { AddressEdit, NavBar, AddressList } from "vant";
 import {
   addresslist,
   addressupdate,
   addresssave,
-  addressdelete,
-} from '@/api/mall'
-import { getLocalStorage } from "@/core/utils/local-storage";
+  addressdelete
+} from "@/api/mall";
+import { getLocalStorage,setLocalStorage } from "@/core/utils/local-storage";
 
 export default {
   components: {
     [AddressEdit.name]: AddressEdit,
     [AddressList.name]: AddressList,
-    [NavBar.name]: NavBar,
+    [NavBar.name]: NavBar
   },
   data() {
     return {
       chosenAddressId: -1,
       addressList: [],
       infoData: []
-    }
+    };
   },
   mounted() {
-    this.load()
+    this.load();
   },
   methods: {
     // async getAddress() {
@@ -57,37 +58,42 @@ export default {
         "avatar",
         "login"
       );
-      addresslist().then((res) => {
-        const { rows } = res
+      addresslist().then(res => {
+        const { rows } = res;
         for (var i = 0; i < rows.length; i++) {
-          var item = rows[i]
+          var item = rows[i];
           if (item.user.id == this.infoData.user_id) {
             this.addressList.push({
               id: item.id,
               name: item.name,
               tel: item.tel,
-              address: item.province + item.city + item.county + " " + item.addressDetail,
+              address:
+                item.province +
+                item.city +
+                item.county +
+                " " +
+                item.addressDetail,
               isDefault: item.default
-            })
-            if(item.default === true){
-              this.chosenAddressId = item.id
+            });
+            if (item.default === true) {
+              this.chosenAddressId = item.id;
             }
           }
         }
-      })
+      });
     },
     onAdd() {
-      this.$router.push({ name: 'editaddress', query: { addressId: -1 } })
+      this.$router.push({ name: "editaddress", query: { addressId: -1 } });
     },
     onEdit(item, index) {
-      debugger
-      this.$router.push({ name: 'editaddress', query: { addressId: item.id} })
+      this.$router.push({ name: "editaddress", query: { addressId: item.id } });
     },
+    onSelect(item, index) {
+      setLocalStorage({ AddressId: item.id });
+      this.$router.go(-1);
+    }, 
   },
-  onClickLeft() {
-    this.$router.go(-1)
-  },
-}
+};
 </script>
 
 <style>
