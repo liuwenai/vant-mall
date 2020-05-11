@@ -3,7 +3,7 @@
 https://github.com/linlinjava/litemall
 
 
-## 说明
+## 网上书籍商城
 
 ### 接口
 
