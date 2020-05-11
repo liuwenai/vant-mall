@@ -102,7 +102,7 @@ export default {
       const username = this.username;
       const password = this.password;
       const loginData = { username,password };
-    // 注意这里要优化判断登录是否成功
+      // 注意这里要优化判断登录是否成功
       const { access_token, user } = await login(loginData);
         // debugger
       cookies.set("token", access_token);

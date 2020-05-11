@@ -149,7 +149,7 @@ export default {
           phone: this.mobile,
           password: this.password
         };
-        // debugger
+        // 调用后台接口，判断个格式是否正确进行注册
         usersave(params).then(response => {
           const { code, msg, data = {} } = response;
           if (code === 100) {
