@@ -67,7 +67,7 @@ import {
   Sku,
   Popup
 } from "vant";
-import { bookshow, itemordersave, bookupdate } from "@/api/mall";
+import { bookshow, addCart, bookupdate } from "@/api/mall";
 import format from "number-format.js";
 import { getLocalStorage } from "@/core/utils/local-storage";
 
@@ -98,7 +98,7 @@ export default {
       customSkuValidator: () => "请选择xxx",
       skuData: {
         goods_id: "",
-        quota: 3,
+        quota: 1,
         quota_used: 0,
         start_sale_num: 1,
         goods_info: {
@@ -174,14 +174,13 @@ export default {
     },
     onAddCartClicked(data) {
       let that = this;
-      const infoData = getLocalStorage("user_id");
+      // const infoData = getLocalStorage("user_id");
       let params = {
-        user: { id: infoData.user_id },
-        goodsId: data.goodsId,
-        number: data.selectedNum
+        book: { id: data.goodsId },
+        num: data.selectedNum
       };
-
-      itemordersave(params).then(() => {
+      addCart(params).then(() => {
+        debugger;
         this.cartInfo = this.cartInfo + data.selectedNum;
         this.$toast({
           message: "已添加至购物车",

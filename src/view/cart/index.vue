@@ -13,13 +13,18 @@
         <van-checkbox :key="book.id" :name="book.id" v-model="book.checked"></van-checkbox>
         <van-swipe-cell>
           <van-card
-            :key="book.id"
+            :key="book.bookid"
             :title="book.title"
             :price="book.price + '.00'"
             :thumb="book.picUrl"
           >
             <div slot="footer">
-              <van-stepper v-model="book.num" async-change max="3" />
+              <van-stepper
+                v-model="book.num"
+                @change="stepperEvent(book,arguments)"
+                async-change
+                max="3"
+              />
             </div>
           </van-card>
           <template #right>
@@ -67,9 +72,9 @@ import {
 } from "vant";
 import { GoodsAction, GoodsActionIcon, GoodsActionButton } from "vant";
 import {
-  itemorderlist,
+  cartlist,
   bookshow,
-  itemorderupdate,
+  cartupdate,
   itemorderdelete,
   mordersave,
   addresslist,
@@ -130,25 +135,31 @@ export default {
     this.load();
   },
   methods: {
+    stepperEvent(book, arg) {
+      debugger;
+      let number = arg[0];
+      cartupdate({
+        num: number,
+        book: { id: book.bookid },
+        id: book.id
+      });
+    },
     load() {
-      this.infoData = getLocalStorage("user_id");
-      itemorderlist().then(res => {
+      // this.infoData = getLocalStorage("user_id");
+      cartlist().then(res => {
         const { rows } = res;
-        for (let i = 0; i < rows.length; i++) {
-          if (rows[i].user.id == this.infoData.user_id) {
-            bookshow({ id: rows[i].goodsId }).then(response => {
-              const good = response.row;
-              this.goods.push({
-                id: rows[i].id,
-                num: rows[i].number,
-                title: good.title,
-                price: good.price
-              });
-              this.allGoods = this.getAllList();
-              this.checkedGoods = this.getCheckedList(this.goods);
-            });
-          }
-        }
+        rows.forEach(item => {
+          debugger;
+          this.goods.push({
+            id: item.id,
+            bookid: item.book.id,
+            num: item.num,
+            title: item.book.title,
+            price: item.book.price
+          });
+          this.allGoods = this.getAllList();
+          this.checkedGoods = this.getCheckedList(this.goods);
+        });
       });
     },
     getAllList() {
@@ -174,49 +185,15 @@ export default {
         this.checkedGoods = this.allGoods;
       }
     },
-    cartSubmit() {
+    cartSubmit(data) {
+      debugger;
       let checkedGoods = this.checkedGoods;
       let that = this;
       const user_id = this.infoData.user_id;
-      userlist().then(res => {
-        const { rows } = res;
-        rows.forEach(item => {
-          if (item.id == user_id) {
-            let addresses = item.addresses;
-            if (addresses != null) {
-              addresses.forEach((item, index) => {
-                if (index === 0) {
-                  const checkorder = [];
-                  checkedGoods.forEach(item => {
-                    let order = { id: item };
-                    checkorder.push(order);
-                  });
-                  const parmas = {
-                    user: { id: user_id },
-                    address: { id: item.id },
-                    itemOrders: checkorder,
-                    fddje: this.totalPrice,
-                    fddzt: "1"
-                  };
-                  debugger
-                  mordersave(parmas).then(res => {
-
-                  });
-                }
-              });
-            } else {
-              this.$toast("您还没有地址，请先添加地址哦~");
-            }
-          }
-        });
-      });
-      // this.$router.push({
-      //   name: "ordercheck",
-      //   query: { checkedGoods: checkedGoods }
-      // });
       debugger;
     },
     deleteCart(o) {
+      debugger;
       itemorderdelete({ id: o }).then(res => {
         this.$toast("删除成功");
         this.isEditor = false;

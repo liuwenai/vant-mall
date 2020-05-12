@@ -5,7 +5,7 @@
       <div class="tal_class_searchMask"></div>
     </div>
     <van-swipe :autoplay="3000" indicator-color="white">
-      <van-swipe-item v-for="(banner, index) in shopInfos.banner" :key="index">
+      <van-swipe-item v-for="(banner, index) in shopInfos" :key="index">
         <img :src="banner.url" style="height:230px" />
       </van-swipe-item>
     </van-swipe>

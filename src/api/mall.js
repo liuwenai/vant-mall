@@ -55,20 +55,20 @@ export const mordersave = (params) => {
   return axios.post(`${prefix}morder/save`, params)
 }
 
-export const itemorderlist = () => {
-  return axios.get(`${prefix}itemorder/index`)
+export const cartlist = () => {
+  return axios.get(`${prefix}cart/index`)
 }
 
-export const itemorderupdate = (params) => {
-  return axios.post(`${prefix}itemorder/update`, params)
+export const cartupdate = (params) => {
+  return axios.post(`${prefix}cart/update`, params)
 }
 
 export const itemorderdelete = (params) => {
-  return axios.post(`${prefix}itemorder/delete/${params.id}`)
+  return axios.post(`${prefix}cart/delete/${params.id}`)
 }
 
-export const itemordersave = (params) => {
-  return axios.post(`${prefix}itemorder/save`, params)
+export const addCart = (params) => {
+  return axios.post(`${prefix}cart/addCart/`, params)
 }
 
 export const itemordershow = (params) => {
