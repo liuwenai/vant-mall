@@ -34,11 +34,11 @@
       </van-cell>
       <!-- <van-field v-model="message" placeholder="请输入备注" label="订单备注">
         <template slot="icon">{{message.length}}/50</template>
-      </van-field> -->
+      </van-field>-->
     </van-cell-group>
 
     <van-submit-bar
-      :price="goodsTotalPrice*100"
+      :price="orderTotalPrice*100"
       label="总计："
       buttonText="提交订单"
       :disabled="isDisabled"
@@ -54,7 +54,8 @@ import {
   itemorderlist,
   mordersave,
   itemordershow,
-  morderlist
+  morderlist,
+  morderupdate
 } from "@/api/mall";
 import { getLocalStorage, setLocalStorage } from "@/core/utils/local-storage";
 import dayjs from "dayjs";
@@ -75,6 +76,7 @@ export default {
       disabledCoupons: [],
       checkedGoods: [],
       fddbh: "",
+      id :""
     };
   },
   mounted() {
@@ -84,9 +86,6 @@ export default {
   },
 
   methods: {
-    onSubmit() {
-      
-    },
     goAddressList() {
       this.$router.push({
         path: "address"
@@ -103,11 +102,12 @@ export default {
             // items.books.forEach(item => {
             //   this.checkedGoodsList.push(item.book);
             // });
-            this.checkedGoodsList = items.books
+            this.id = items.id
+            this.checkedGoodsList = items.books;
             this.goodsTotalPrice = items.fddje;
-            this.fddbh = items.fddbh
+            this.fddbh = items.fddbh;
             this.freightPrice = items.fddyf;
-            this.orderTotalPrice = items.fddje;
+            this.orderTotalPrice = items.fddje + items.fddyf;
             this.checkedAddress.name = items.name;
             this.checkedAddress.tel = items.tel;
             this.checkedAddress.addressDetail = items.address;
@@ -115,6 +115,27 @@ export default {
         });
       });
     },
+    onSubmit() {
+      debugger;
+      const data = {
+        id: this.id,
+        books: this.checkedGoodsList,
+        fddje: this.goodsTotalPrice,
+        fddbh: this.fddbh,
+        fddyf: this.freightPrice,
+        name: this.checkedAddress.name,
+        tel: this.checkedAddress.tel,
+        address: this.checkedAddress.addressDetail,
+        fddzt: '2'
+      };
+      debugger;
+      morderupdate(data).then(res => {
+        this.$router.push({
+          name: "pay",
+          params: { fddbh: data.fddbh, fzje: data.fddje + data.fddyf }
+        });
+      });
+    }
   },
 
   components: {
@@ -137,7 +158,7 @@ export default {
   margin-top: 10px;
 }
 
-.van-cart{
+.van-cart {
   margin: 10px;
   background-color: white;
 }

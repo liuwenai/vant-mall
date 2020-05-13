@@ -75,6 +75,14 @@ export const morderlist = () => {
   return axios.get(`${prefix}morder/index`);
 };
 
+export const morderdelect = (params) => {
+  return axios.post(`${prefix}morder/delete/${params.id}`)
+}
+
+export const morderupdate = (params) => {
+  return axios.post(`${prefix}morder/update`, params)
+}
+
 export const itemordershow = (params) => {
   return axios.get(`${prefix}itemorder/show/${params.id}`)
 }

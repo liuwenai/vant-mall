@@ -6,24 +6,23 @@
           v-model="loading"
           :finished="finished"
           :immediate-check="false"
-          finished-text="没有更多了"
-          @load="getOrderList"
+          @load="load"
         >
           <van-panel
             v-for="(el, i) in orderList"
             :key="i"
-            :title="'订单编号: ' + el.orderSn"
+            :title="'订单编号: ' + el.fddbh"
             :status="el.orderStatusText"
             @click.native="toOrderDetail(el.id)"
           >
             <van-card
-              v-for="(goods, goodsI) in el.goodsList"
+              v-for="(goods, goodsI) in el.books"
               :key="goodsI"
-              :title="goods.goodsName"
-              :num="goods.number"
+              :title="goods.title"
+              :num="goods.gmsl"
               :thumb="goods.picUrl"
             >
-              <div slot="desc">
+              <!-- <div slot="desc">
                 <div class="desc">
                   <van-tag
                     plain
@@ -32,44 +31,31 @@
                     :key="index"
                   >{{spec}}</van-tag>
                 </div>
-              </div>
+              </div>-->
             </van-card>
-            <div class="total">合计: {{el.actualPrice * 100 | yuan}}（含运费{{el.post_fee | yuan}}）</div>
+            <div class="total">合计: {{ el.fddje }} 元</div>
 
             <div slot="footer" class="footer_btn">
+              <van-button size="small" v-if="el.fddzt === '0'" @click.stop="delOrder(el.id)">取消订单</van-button>
               <van-button
                 size="small"
-                v-if="el.handleOption.cancel"
-                @click.stop="cancelOrder(el.id)"
-              >取消订单</van-button>
-              <van-button
-                size="small"
-                v-if="el.handleOption.pay"
+                v-if="el.fddzt === '0'"
                 type="danger"
-                @click.stop="toPay(el.id)"
+                @click.stop="toPay(el)"
               >去支付</van-button>
               <van-button
                 size="small"
-                v-if="el.handleOption.refund"
+                v-if="el.fddzt !== '0'"
                 type="danger"
-                @click.stop="refundOrder(el.id)"
+                @click.stop="sorry(el.id)"
               >退款</van-button>
               <van-button
                 size="small"
-                v-if="el.handleOption.confirm"
+                v-if="el.fddzt !== '0'"
                 type="danger"
-                @click.stop="confirmOrder(el.id)"
+                @click.stop="sorry(el.id)"
               >确认收货</van-button>
-              <van-button
-                size="small"
-                v-if="el.handleOption.delete"
-                @click.stop="delOrder(el.id)"
-              >删除订单</van-button>
-              <van-button
-                size="small"
-                v-if="el.handleOption.comment"
-                @click.stop="commentOrder(el.id)"
-              >去评价</van-button>
+              <van-button size="small" @click.stop="delOrder(el.id)">删除订单</van-button>
             </div>
           </van-panel>
         </van-list>
@@ -79,18 +65,12 @@
 </template>
 
 <script>
-// import {
-//   orderList,
-//   orderDelete,
-//   orderConfirm,
-//   orderCancel,
-//   orderRefund
-// } from '@/api/api';
-import _ from 'lodash';
-import { Tab, Tabs, Panel, Card, List, Tag } from 'vant';
+import { morderlist, morderdelect, morderupdate } from "@/api/mall";
+import _ from "lodash";
+import { Tab, Tabs, Panel, Card, List, Tag, Dialog } from "vant";
 
 export default {
-  name: 'order-list',
+  name: "order-list",
 
   props: {
     active: {
@@ -98,13 +78,13 @@ export default {
       default: 0
     }
   },
-  created() {
-    this.init();
+  mounted() {
+    this.load();
   },
   data() {
     return {
       activeIndex: Number(this.active),
-      tabTitles: ['全部', '待付款', '待发货', '待收货', '待评价'],
+      tabTitles: ["全部", "待付款", "待发货", "待收货", "待评价"],
       orderList: [],
       page: 0,
       limit: 10,
@@ -114,84 +94,35 @@ export default {
   },
 
   methods: {
-    init() {
-      this.page = 0;
-      this.orderList = [];
-      this.getOrderList();
-    },
-    getOrderList() {
-      this.page++;
-      orderList({
-        showType: this.activeIndex,
-        page: this.page,
-        limit: this.limit
-      }).then(res => {
-        this.orderList.push(...res.data.data.list);
-        this.loading = false;
-        this.finished = res.data.data.page >= res.data.data.pages;
+    load() {
+      let that = this;
+      morderlist().then(res => {
+        that.orderList = res.rows;
       });
+      this.finished = true;
     },
     delOrder(id) {
       let that = this;
       this.$dialog
-        .confirm({ message: '确定要删除该订单吗?' })
+        .confirm({ message: "确定要删除该订单吗?" })
         .then(() => {
-          orderDelete({ orderId: id }).then(() => {
-            this.init();
-            this.$toast('已删除订单');
+          morderdelect({ id: id }).then(() => {
+            this.load();
+            this.$toast("已删除订单");
           });
         })
         .catch(() => {});
     },
-    cancelOrder(id) {
-      this.$dialog
-        .confirm({ message: '确定要取消该订单吗?' })
-        .then(() => {
-          orderCancel({ orderId: id }).then(() => {
-            this.init();
-            this.$toast('已取消该订单');
-          });
-        })
-        .catch(() => {});
+    toPay(data){
+      data.fddzt = "2"
+      debugger
+      morderupdate(data).then(res=>{
+        this.$router.push({ name: 'pay', params: { fddbh: data.fddbh, fzje: data.fddje + data.fddyf} })
+      })
     },
-    refundOrder(id) {
-      this.$dialog
-        .confirm({ message: '确定要申请退款吗?' })
-        .then(() => {
-          orderRefund({ orderId: id }).then(() => {
-            this.init();
-            this.$toast('已申请订单退款');
-          });
-        })
-        .catch(() => {});
-    },
-    confirmOrder(id) {
-      this.$dialog
-        .confirm({
-          message: '请确认收到货物, 确认收货后无法撤销!'
-        })
-        .then(() => {
-          orderConfirm({ orderId: id }).then(() => {
-            this.init();
-            this.$toast('已确认收货');
-          });
-        })
-        .catch(() => {});
-    },
-    commentOrder(id) {},
-    toPay(id) {
-      this.$router.push({ name: 'payment', params: { orderId: id } });
-    },
-    handleTabClick() {
-      this.page = 0;
-      this.orderList = [];
-      this.getOrderList();
-    },
-    toOrderDetail(id) {
-      this.$router.push({
-        path: '/order/order-detail',
-        query: { orderId: id }
-      });
+    handleTabClick() {},
+    sorry(id) {
+      this.$toast("暂无后续逻辑~");
     }
   },
   components: {
@@ -200,7 +131,8 @@ export default {
     [Panel.name]: Panel,
     [Card.name]: Card,
     [List.name]: List,
-    [Tag.name]: Tag
+    [Tag.name]: Tag,
+    [Dialog.name]: Dialog
   }
 };
 </script>

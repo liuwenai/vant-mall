@@ -72,6 +72,13 @@ const routes = [{
       title: '订单详情',
     }
   },
+  {
+    name: 'pay',
+    component: () => import('../view/pay'),
+    meta: {
+      title: '支付',
+    }
+  },
 
   {
     name: 'setting',

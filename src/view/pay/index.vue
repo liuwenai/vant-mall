@@ -1,6 +1,6 @@
 <template>
   <div>
-    <van-nav-bar title="会员缴费" left-text="返回" left-arrow @click-left="onClickLeft" />
+    <van-nav-bar title="付款" left-text="返回" left-arrow @click-left="onClickLeft" />
     <div class="time_down payment_group">
       <span class="red">
         <van-count-down format="HH:mm:ss:SS" :time="time" @finish="onFinish">
@@ -12,9 +12,9 @@
     </div>
 
     <van-cell-group class="payment_group">
-      <van-cell title="订单编号" :value="bh" />
+      <van-cell title="订单编号" :value="fddbh" />
       <van-cell title="实付金额">
-        <span class="red">{{sfje}}</span>
+        <span class="red">{{fzje}}</span>
       </van-cell>
     </van-cell-group>
     <!-- <van-card
@@ -91,69 +91,34 @@ export default {
       counting: true,
       isSubmit: false,
       payWay: "ali",
-      bh: "",
-      je: 0,
+      fddbh:[],
+      fzje: 0,
       html: ""
     };
   },
-  mounted() {
-    const { bh, je } = this.$route.params;
-    this.bh = bh;
-    this.je = je;
-    // this.loadAli();
-  },
+  // mounted() {
+  //   const { bh, je } = this.$route.params;
+  //   this.bh = bh;
+  //   this.je = je;
+  //   // this.loadAli();
+  // },
   computed: {
     sfje() {
       return this.je;
     }
   },
+  mounted(){
+    const { fddbh, fzje } = this.$route.params;
+    this.fddbh = fddbh
+    this.fzje = fzje
+    // debugger
+    // this.load()
+  },
   methods: {
+    // 
     paySubmit() {
       Notify("支付通道暂未开通！");
       return;
-      // debugger;
-      // if (this.payWay === "ali") {
-      //   this.loadAli();
-      // } else if (this.payWay === "wx") {
-      //   this.loadWx();
-      // } else {
-      //   this.loadUp();
-      // }
-      // this.$router.push({
-      //   name: "paymentStatus",
-      //   params: {
-      //     status: "success"
-      //   }
-      // });
-    },
-    loadAli() {
-      let param = {
-        orderId: this.$route.query.orderId
-      };
-      this.userinfor(param).then(res => {
-        this.html = res.data;
-        this.$nextTick(() => {
-          document.forms[0].submit(); //渲染支付宝支付页面
-        });
-      });
-    },
-    loadWx() {
-      let data = {
-        amount: this.number
-      };
-      this.userinfor(data).then(res => {
-        if (res.data.code === 200) {
-          this.weChatParameter = res.data.data;
-          // console.log(this.weChatParameter,"微信内支付需要参数")
-          this.weixinPay();
-        } else {
-          Toast({
-            message: res.data.msg,
-            position: "middle",
-            duration: 1000
-          });
-        }
-      });
     },
     loadUp() {},
     onClickLeft() {
