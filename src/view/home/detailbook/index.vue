@@ -175,11 +175,11 @@ export default {
     onAddCartClicked(data) {
       let that = this;
       // const infoData = getLocalStorage("user_id");
-      let params = {
-        book: { id: data.goodsId },
-        num: data.selectedNum
-      };
-      addCart(params).then(() => {
+      // let params = {
+      //   book: { id: data.goodsId },
+      //   num: data.selectedNum
+      // };
+      addCart(data.goodsId,data.selectedNum).then(() => {
         debugger;
         this.cartInfo = this.cartInfo + data.selectedNum;
         this.$toast({

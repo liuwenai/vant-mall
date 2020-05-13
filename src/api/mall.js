@@ -67,9 +67,13 @@ export const itemorderdelete = (params) => {
   return axios.post(`${prefix}cart/delete/${params.id}`)
 }
 
-export const addCart = (params) => {
-  return axios.post(`${prefix}cart/addCart/`, params)
+export const addCart = (bookid,booksl) => {
+  return axios.post(`${prefix}cart/addCart/${bookid}/${booksl}`)
 }
+
+export const morderlist = () => {
+  return axios.get(`${prefix}morder/index`);
+};
 
 export const itemordershow = (params) => {
   return axios.get(`${prefix}itemorder/show/${params.id}`)

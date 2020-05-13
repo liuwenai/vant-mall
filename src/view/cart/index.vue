@@ -8,9 +8,9 @@
         }}
       </span>-->
     </div>
-    <van-checkbox-group v-model="checkedGoods" ref="checkboxGroup">
+    <van-checkbox-group v-model="checkedGoods" @change="totalAdd" ref="checkboxGroup">
       <div v-for="(book, index) in goods" :key="index" class="card-goods__item">
-        <van-checkbox :key="book.id" :name="book.id" v-model="book.checked"></van-checkbox>
+        <van-checkbox :key="book.id" :name="book"></van-checkbox>
         <van-swipe-cell>
           <van-card
             :key="book.bookid"
@@ -20,7 +20,7 @@
           >
             <div slot="footer">
               <van-stepper
-                v-model="book.num"
+                v-model="book.gmsl"
                 @change="stepperEvent(book,arguments)"
                 async-change
                 max="3"
@@ -49,7 +49,7 @@
       label="总计"
       @submit="cartSubmit"
     >
-      <van-checkbox v-model="checkedAll" @click="setCheckAll" style="padding: 0 10px;">全选</van-checkbox>
+      <van-checkbox v-model="checkedAll" @change="checkAll">全选</van-checkbox>
     </van-submit-bar>
     <BaseFooter />
   </div>
@@ -83,7 +83,10 @@ import {
 } from "@/api/mall";
 import { getLocalStorage, setLocalStorage } from "@/core/utils/local-storage";
 import _ from "lodash";
-
+import dayjs from "dayjs";
+const today = new Date();
+const todayStr = dayjs(today).format("YYYY-MM-DD");
+const timeStr = dayjs(today).format("YYYYMMDDHHMMss");
 export default {
   components: {
     [GoodsAction.name]: GoodsAction,
@@ -110,25 +113,12 @@ export default {
       checkedGoods: [],
       allGoods: [],
       goods: [],
-      num: "",
-      book: [],
-      infoData: [],
-      address: {}
+      totalPrice: 0
     };
   },
   computed: {
     submitBarText() {
       return this.isEditor ? "删除" : "结算";
-    },
-    totalPrice() {
-      return this.goods.reduce(
-        (total, item) =>
-          total +
-          (this.checkedGoods.indexOf(item.id) !== -1
-            ? item.price * item.num * 100
-            : 0),
-        0
-      );
     }
   },
   mounted() {
@@ -145,55 +135,45 @@ export default {
       });
     },
     load() {
-      // this.infoData = getLocalStorage("user_id");
       cartlist().then(res => {
         const { rows } = res;
-        rows.forEach(item => {
-          debugger;
-          this.goods.push({
-            id: item.id,
-            bookid: item.book.id,
-            num: item.num,
-            title: item.book.title,
-            price: item.book.price
-          });
-          this.allGoods = this.getAllList();
-          this.checkedGoods = this.getCheckedList(this.goods);
-        });
+        this.goods = rows;
       });
     },
-    getAllList() {
-      let result = [];
-      _.each(this.goods, v => {
-        result.push(v.id);
-      });
-      return result;
-    },
-    getCheckedList(goods) {
-      let result = [];
-      _.each(goods, v => {
-        if (v.checked) {
-          result.push(v.id);
-        }
-      });
-      return result;
-    },
-    setCheckAll(val) {
-      if (this.checkedGoods.length === this.allGoods.length) {
-        this.checkedGoods = [];
+    checkAll() {
+      if (this.checkedAll == false) {
+        this.$refs.checkboxGroup.toggleAll();
       } else {
-        this.checkedGoods = this.allGoods;
+        this.$refs.checkboxGroup.toggleAll(true);
       }
     },
-    cartSubmit(data) {
-      debugger;
+    cartSubmit() {
       let checkedGoods = this.checkedGoods;
-      let that = this;
-      const user_id = this.infoData.user_id;
-      debugger;
+      const carts = [];
+      checkedGoods.forEach(item => {
+        let cart = { id: item.id, gmsl: item.gmsl };
+        carts.push(cart);
+      });
+      mordersave({ bookDtos: carts }).then(res => {
+        if (res.code === 100) {
+          this.$router.push({ name: "ordercheck", query: { id: res.id } });
+                debugger;
+
+        } else {
+          this.$toast("您还没有添加地址哦~请先添加地址");
+        }
+      });
+    },
+    totalAdd(value) {
+      let total = 0;
+      if (value) {
+        this.checkedGoods.forEach(item => {
+          total += item.price * item.gmsl * 100;
+        });
+        this.totalPrice = total;
+      }
     },
     deleteCart(o) {
-      debugger;
       itemorderdelete({ id: o }).then(res => {
         this.$toast("删除成功");
         this.isEditor = false;
