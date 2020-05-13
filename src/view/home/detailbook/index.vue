@@ -95,7 +95,6 @@ export default {
       showStepper: false,
       showSoldout: false,
       closeOnClickOverlay: true,
-      customSkuValidator: () => "请选择xxx",
       skuData: {
         goods_id: "",
         quota: 1,

@@ -23,7 +23,6 @@
                 v-model="book.gmsl"
                 @change="stepperEvent(book,arguments)"
                 async-change
-                max="3"
               />
             </div>
           </van-card>

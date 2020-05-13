@@ -136,4 +136,9 @@ export default {
 .order-coupon {
   margin-top: 10px;
 }
+
+.van-cart{
+  margin: 10px;
+  background-color: white;
+}
 </style>
