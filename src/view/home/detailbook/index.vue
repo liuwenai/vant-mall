@@ -130,7 +130,7 @@ export default {
     this.fid = this.$route.params.id;
   },
   mounted() {
-    this.fid = this.$route.params.id;
+    this.fid = this.$route.query.id;
     this.load();
   },
   methods: {
@@ -146,7 +146,7 @@ export default {
       //     this.skuData.sku.stock_num = this.book.kcsl
       //   }
       // })
-      bookshow({ id: this.fid }).then(res => {
+      bookshow({ id: this.$route.query.id }).then(res => {
         const { row } = res;
         this.book = row;
         this.skuData.goods_id = row.id;

@@ -106,7 +106,7 @@ export default {
       })
     },
     onDetailbook(data) {
-      this.$router.push({ name: 'detailbook', params: { id: data.id } })
+      this.$router.push({ name: 'detailbook', query: { id: data.id } })
     },
     onSearch() {
       this.$router.push('search')
