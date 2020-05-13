@@ -2,12 +2,7 @@
   <div class="order_list">
     <van-tabs v-model="activeIndex" :swipe-threshold="5" @click="handleTabClick">
       <van-tab v-for="(tabTitle, index) in tabTitles" :title="tabTitle" :key="index">
-        <van-list
-          v-model="loading"
-          :finished="finished"
-          :immediate-check="false"
-          @load="load"
-        >
+        <van-list v-model="loading" :finished="finished" :immediate-check="false" @load="load">
           <van-panel
             v-for="(el, i) in orderList"
             :key="i"
@@ -21,18 +16,7 @@
               :title="goods.title"
               :num="goods.gmsl"
               :thumb="goods.picUrl"
-            >
-              <!-- <div slot="desc">
-                <div class="desc">
-                  <van-tag
-                    plain
-                    style="margin-right:6px;"
-                    v-for="(spec, index) in goods.specifications"
-                    :key="index"
-                  >{{spec}}</van-tag>
-                </div>
-              </div>-->
-            </van-card>
+            ></van-card>
             <div class="total">合计: {{ el.fddje }} 元</div>
 
             <div slot="footer" class="footer_btn">
@@ -84,7 +68,7 @@ export default {
   data() {
     return {
       activeIndex: Number(this.active),
-      tabTitles: ["全部", "待付款", "待发货", "待收货", "待评价"],
+      tabTitles: ["我的订单"],
       orderList: [],
       page: 0,
       limit: 10,
@@ -113,12 +97,15 @@ export default {
         })
         .catch(() => {});
     },
-    toPay(data){
-      data.fddzt = "2"
-      debugger
-      morderupdate(data).then(res=>{
-        this.$router.push({ name: 'pay', params: { fddbh: data.fddbh, fzje: data.fddje + data.fddyf} })
-      })
+    toPay(data) {
+      data.fddzt = "2";
+      debugger;
+      morderupdate(data).then(res => {
+        this.$router.push({
+          name: "pay",
+          params: { fddbh: data.fddbh, fzje: data.fddje + data.fddyf }
+        });
+      });
     },
     handleTabClick() {},
     sorry(id) {

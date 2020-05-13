@@ -4,7 +4,7 @@
     <div style="width: 100%;margin-top: 10px;">
       <van-cell-group>
         <van-field label="账号" readonly :value="username" />
-        <van-field label="用户名" :value="usermc" />
+        <van-field label="用户名" readonly :value="usermc" />
         <van-field label="绑定电话" readonly :value="fmobile" />
         <van-field label="密码"  :value="password" />
       </van-cell-group>

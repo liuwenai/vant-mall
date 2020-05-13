@@ -5,7 +5,7 @@
         <van-cell title="用户名" :value="username" />
         <van-cell title="我的收货地址" is-link to="address" />
         <van-cell title="账户与安全" is-link to="my" />
-        <van-cell title="通用" is-link to="common" />
+        <!-- <van-cell title="通用" is-link to="common" /> -->
       </div>
       <div style="display:flex;justify-content: center;">
         <van-button style="margin: 30px auto;" type="info" @click="loginOut">退出登录</van-button>
