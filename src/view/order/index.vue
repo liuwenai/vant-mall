@@ -1,57 +1,53 @@
 <template>
   <div class="order_list">
-    <van-tabs v-model="activeIndex" :swipe-threshold="5" @click="handleTabClick">
-      <van-tab v-for="(tabTitle, index) in tabTitles" :title="tabTitle" :key="index">
-        <van-list v-model="loading" :finished="finished" :immediate-check="false" @load="load">
-          <van-panel
-            v-for="(el, i) in orderList"
-            :key="i"
-            :title="'订单编号: ' + el.fddbh"
-            :status="el.orderStatusText"
-            @click.native="toOrderDetail(el.id)"
-          >
-            <van-card
-              v-for="(goods, goodsI) in el.books"
-              :key="goodsI"
-              :title="goods.title"
-              :num="goods.gmsl"
-              :thumb="goods.picUrl"
-            ></van-card>
-            <div class="total">合计: {{ el.fddje }} 元</div>
+    <van-nav-bar title="我的订单" left-arrow @click-left="onClickLeft" />
+    <!-- <van-tabs v-model="activeIndex" :swipe-threshold="5" @click="handleTabClick">
+    <van-tab v-for="(tabTitle, index) in tabTitles" :title="tabTitle" :key="index">-->
+    <van-list v-model="loading" :finished="finished" :immediate-check="false" @load="load">
+      <van-panel
+        v-for="(el, i) in orderList"
+        :key="i"
+        :title="'订单编号: ' + el.fddbh"
+        :status="el.orderStatusText"
+        @click.native="toOrderDetail(el.id)"
+      >
+        <van-card
+          v-for="(goods, goodsI) in el.books"
+          :key="goodsI"
+          :title="goods.title"
+          :num="goods.gmsl"
+          :thumb="goods.picUrl"
+        ></van-card>
+        <div class="total">合计: {{ el.fddje }} 元</div>
 
-            <div slot="footer" class="footer_btn">
-              <van-button size="small" v-if="el.fddzt === '0'" @click.stop="delOrder(el.id)">取消订单</van-button>
-              <van-button
-                size="small"
-                v-if="el.fddzt === '0'"
-                type="danger"
-                @click.stop="toPay(el)"
-              >去支付</van-button>
-              <van-button
-                size="small"
-                v-if="el.fddzt !== '0'"
-                type="danger"
-                @click.stop="sorry(el.id)"
-              >退款</van-button>
-              <van-button
-                size="small"
-                v-if="el.fddzt !== '0'"
-                type="danger"
-                @click.stop="sorry(el.id)"
-              >确认收货</van-button>
-              <van-button size="small" @click.stop="delOrder(el.id)">删除订单</van-button>
-            </div>
-          </van-panel>
-        </van-list>
-      </van-tab>
-    </van-tabs>
+        <div slot="footer" class="footer_btn">
+          <van-button size="small" v-if="el.fddzt === '0'" @click.stop="delCancle(el.id)">取消订单</van-button>
+          <van-button size="small" v-if="el.fddzt === '0'" type="danger" @click.stop="toPay(el)">去支付</van-button>
+          <van-button
+            size="small"
+            v-if="el.fddzt !== '0'"
+            type="danger"
+            @click.stop="sorry(el.id)"
+          >退款</van-button>
+          <van-button
+            size="small"
+            v-if="el.fddzt !== '0'"
+            type="danger"
+            @click.stop="sorry(el.id)"
+          >确认收货</van-button>
+          <van-button size="small" @click.stop="delOrder(el.id)">删除订单</van-button>
+        </div>
+      </van-panel>
+    </van-list>
+    <!-- </van-tab>
+    </van-tabs>-->
   </div>
 </template>
 
 <script>
 import { morderlist, morderdelect, morderupdate } from "@/api/mall";
 import _ from "lodash";
-import { Tab, Tabs, Panel, Card, List, Tag, Dialog } from "vant";
+import { Tab, Tabs, Panel, Card, List, Tag, Dialog, NavBar } from "vant";
 
 export default {
   name: "order-list",
@@ -97,6 +93,18 @@ export default {
         })
         .catch(() => {});
     },
+    delCancle(id) {
+      let that = this;
+      this.$dialog
+        .confirm({ message: "确定要取消该订单吗?" })
+        .then(() => {
+          morderdelect({ id: id }).then(() => {
+            this.load();
+            this.$toast("已取消订单");
+          });
+        })
+        .catch(() => {});
+    },
     toPay(data) {
       data.fddzt = "2";
       debugger;
@@ -107,7 +115,9 @@ export default {
         });
       });
     },
-    handleTabClick() {},
+    onClickLeft() {
+      this.$router.push({ name: "user" });
+    },
     sorry(id) {
       this.$toast("暂无后续逻辑~");
     }
@@ -119,7 +129,8 @@ export default {
     [Card.name]: Card,
     [List.name]: List,
     [Tag.name]: Tag,
-    [Dialog.name]: Dialog
+    [Dialog.name]: Dialog,
+    [NavBar.name]: NavBar
   }
 };
 </script>

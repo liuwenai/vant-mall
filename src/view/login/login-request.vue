@@ -38,13 +38,13 @@
         <router-link to="/login/registerLogon">用户注册</router-link>
       </div>
       <div class="float-r">
-          <router-link to="/login/forget/reset">忘记密码</router-link>
+        <router-link to="/login/forget/reset">忘记密码</router-link>
       </div>
     </div>
 
     <!-- <van-popup v-model="showKefu">
       <md-kefu mobile="15839334498" />
-    </van-popup> -->
+    </van-popup>-->
   </div>
 </template>
 
@@ -54,7 +54,7 @@ import fieldGroup from "@/components/field-group/";
 import md_kefu from "@/components/md-kefu/";
 
 // import { login, userinfo } from "@/api/member";
-import { login }  from "@/api/mall";
+import { login, userlist } from "@/api/mall";
 import { setLocalStorage } from "@/core/utils/local-storage";
 import { emailReg, mobileReg } from "@/core/regexp";
 import cookies from "@/core/utils/cookies";
@@ -79,7 +79,7 @@ export default {
   },
   mounted() {
     // debugger;
-    const {userzh,password} = this.$route.params
+    const { userzh, password } = this.$route.params;
     this.username = userzh;
     this.password = password;
   },
@@ -101,33 +101,45 @@ export default {
     async login() {
       const username = this.username;
       const password = this.password;
-      const loginData = { username,password };
+      const loginData = { username, password };
       // 注意这里要优化判断登录是否成功
       const { access_token, user } = await login(loginData);
-        // debugger
       cookies.set("token", access_token);
       setLocalStorage({
         Authorization: access_token,
         nick_name: user.usermc,
         username: user.userzh,
         user_id: user.id,
-        login:true,
-        user: user
+        login: true
       });
-      // 把用户信息放入全局变量
-      // this.$eventBus["loginUser"] = {
-      //   Authorization: access_token,
-      //   user_id: id,
-      //   nick_name: usermc,
-      // };
       this.routerRedirect();
     },
-
+    async loadpd() {
+      const username = this.username;
+      const password = this.password;
+      // const loginData = { username, password };
+      userlist().then(res => {
+        const { rows } = res;
+        let row = rows.find(item => item.userzh === username);
+        debugger;
+        if (row) {
+          //判断密码
+          if (row.password === password) {
+             this.login()
+          } else {
+            this.$toast("请输入正确的密码");
+          }
+        } else {
+          this.$toast("用户不存在");
+        }
+      });
+    },
     async loginSubmit() {
       this.isLogining = true;
       try {
         await this.validate();
-        await this.login();
+        this.loadpd()
+        // await this.login();
         // await this.getUserProfile();
         this.isLogining = false;
       } catch (err) {
@@ -136,14 +148,8 @@ export default {
       }
     },
 
-
     routerRedirect() {
-      // const { query } = this.$route;
-      // this.$router.replace({
-      //   name: "home",
-      //   query: query
-      // });
-      window.location = '#/user/';
+      window.location = "#/user/";
     },
 
     // getLoginData() {

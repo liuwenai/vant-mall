@@ -36,6 +36,11 @@ export const usershow = params => {
   return axios.get(`${prefix}user/show/${params.id}`);
 };
 
+// 购物车初始化
+export const initcart = (params) => {
+  return axios.get(`${prefix}init/cart`, params)
+}
+
 export const userupdate = params => {
   return axios.post(`${prefix}user/update`, params)
 }

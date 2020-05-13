@@ -19,11 +19,7 @@
             :thumb="book.picUrl"
           >
             <div slot="footer">
-              <van-stepper
-                v-model="book.gmsl"
-                @change="stepperEvent(book,arguments)"
-                async-change
-              />
+              <van-stepper v-model="book.gmsl" @change="stepperEvent(book,arguments)" async-change />
             </div>
           </van-card>
           <template #right>
@@ -78,7 +74,7 @@ import {
   mordersave,
   addresslist,
   usershow,
-  userlist
+  userlist,
 } from "@/api/mall";
 import { getLocalStorage, setLocalStorage } from "@/core/utils/local-storage";
 import _ from "lodash";
@@ -153,12 +149,12 @@ export default {
         let cart = { id: item.id, gmsl: item.gmsl };
         carts.push(cart);
       });
+      debugger;
       mordersave({ bookDtos: carts }).then(res => {
         if (res.code === 100) {
           this.$router.push({ name: "ordercheck", query: { id: res.id } });
-                debugger;
-
-        } else {
+        }
+        if (res.code == -100) {
           this.$toast("您还没有添加地址哦~请先添加地址");
         }
       });

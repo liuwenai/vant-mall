@@ -15,10 +15,10 @@
     <router-link to="/logon">免费注册</router-link>-->
 
     <van-cell-group class="user-group">
-      <van-cell icon="records" title="我的订单" to="order" is-link />
+      <van-cell icon="records" title="我的订单" to="/order" is-link />
       <van-row class="user-links">
         <van-col span="6">
-          <van-icon name="pending-payment" @click="$router.push({path: '/order/1'})" />待付款
+          <van-icon name="pending-payment" />待付款
         </van-col>
         <van-col span="6">
           <van-icon name="records" />待发货
@@ -34,8 +34,8 @@
 
     <van-cell-group>
       <van-cell icon="gift-o" title="收货地址"  @click="toAddress" is-link />
-      <van-cell icon="service-o" title="我的客服" to="serve" is-link />
-      <van-cell icon="setting-o" title="设置" to="setting" is-link />
+      <van-cell icon="service-o" title="我的客服" to="/serve" is-link />
+      <van-cell icon="setting-o" title="设置" to="/setting" is-link />
     </van-cell-group>
 
     <BaseFooter active="user" />

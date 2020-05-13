@@ -1,6 +1,6 @@
 <template>
   <div>
-    <van-nav-bar title="付款" left-text="返回" left-arrow @click-left="onClickLeft" />
+    <van-nav-bar title="付款" left-arrow @click-left="onClickLeft" />
     <div class="time_down payment_group">
       <span class="red">
         <van-count-down format="HH:mm:ss:SS" :time="time" @finish="onFinish">
@@ -91,7 +91,7 @@ export default {
       counting: true,
       isSubmit: false,
       payWay: "ali",
-      fddbh:[],
+      fddbh: [],
       fzje: 0,
       html: ""
     };
@@ -107,22 +107,21 @@ export default {
       return this.je;
     }
   },
-  mounted(){
+  mounted() {
     const { fddbh, fzje } = this.$route.params;
-    this.fddbh = fddbh
-    this.fzje = fzje
+    this.fddbh = fddbh;
+    this.fzje = fzje;
     // debugger
     // this.load()
   },
   methods: {
-    // 
+    //
     paySubmit() {
       Notify("支付通道暂未开通！");
       return;
     },
-    loadUp() {},
     onClickLeft() {
-      this.$router.go(-1);
+      this.$router.push({ name: "order" });
     },
     onFinish() {
       this.counting = false;
