@@ -1,6 +1,6 @@
 <template>
   <div>
-    <van-nav-bar title="客服" left-arrow @click-left="onClickLeft" />
+    <van-nav-bar title="客服" left-arrow @click-left="$router.go(-1)" />
       <van-cell-group>
         <van-cell title="项目名称" value="h5-bookmall" />
         <van-cell title="项目地址" value="Github"  url="https://github.com/liuwenai/vant-mall"/>

@@ -25,12 +25,12 @@
           <van-tag class="goods-tag" type="danger">官方</van-tag>
         </template>-->
       </van-cell>
-      <!-- <van-cell title="线下门店" icon="location-o" is-link @click="sorry" /> -->
+      <van-cell title="线下门店" icon="location-o" is-link @click="sorry" />
     </van-cell-group>
 
-    <van-cell-group class="goods-cell-group">
+    <!-- <van-cell-group class="goods-cell-group">
       <van-cell title="评论" is-link to="comment" />
-    </van-cell-group>
+    </van-cell-group>-->
 
     <van-goods-action>
       <van-goods-action-icon icon="chat-o" @click="toServe">客服</van-goods-action-icon>
@@ -67,7 +67,7 @@ import {
   Sku,
   Popup
 } from "vant";
-import { bookshow, addCart, bookupdate } from "@/api/mall";
+import { bookshow, addCart, mordersave } from "@/api/mall";
 import format from "number-format.js";
 import { getLocalStorage } from "@/core/utils/local-storage";
 
@@ -146,10 +146,9 @@ export default {
       //     this.skuData.sku.stock_num = this.book.kcsl
       //   }
       // })
-      let that = this;
       bookshow({ id: this.fid }).then(res => {
         const { row } = res;
-        that.book = row;
+        this.book = row;
         this.skuData.goods_id = row.id;
         this.skuData.sku.price = row.price;
         this.skuData.sku.stock_num = row.kcsl;
@@ -165,39 +164,38 @@ export default {
       this.$router.push("cart");
     },
     onBuyClicked(data) {
-      let that = this;
-      let params = {
-        goodsId: data.goodsId,
-        number: data.selectedNum
-      };
+      debugger
+      let cart = { id: data.goodsId, gmsl: data.selectedNum };   
+      mordersave({ bookDtos: cart }).then(res => {
+        if (res.code === 100) {
+          this.$router.push({ name: "ordercheck", query: { id: res.id } });
+          debugger;
+        } else {
+          this.$toast("您还没有添加地址哦~请先添加地址");
+        }
+      });
     },
     onAddCartClicked(data) {
-      let that = this;
-      // const infoData = getLocalStorage("user_id");
-      // let params = {
-      //   book: { id: data.goodsId },
-      //   num: data.selectedNum
-      // };
-      addCart(data.goodsId,data.selectedNum).then(() => {
+      addCart(data.goodsId, data.selectedNum).then(() => {
         debugger;
         this.cartInfo = this.cartInfo + data.selectedNum;
         this.$toast({
           message: "已添加至购物车",
           duration: 1500
         });
-        that.showBase = false;
+        this.showBase = false;
       });
-      that.book.kcsl = that.book.kcsl - data.selectedNum;
-      // bookupdate(that.book).then(res => {
-      //   that.load();
-      // });
-      // this.$router.push({ name: 'cart', params: { id: data.id } })
+      this.book.kcsl = this.book.kcsl - data.selectedNum;
+      this.skuData.sku.stock_num = this.book.kcsl;
     },
     toHome() {
       this.$router.push({ name: "home" });
     },
     toServe() {
       this.$router.push({ name: "serve" });
+    },
+    sorry() {
+      this.$toast({ message: "暂时没有线下门店哦~" });
     }
   }
 };
