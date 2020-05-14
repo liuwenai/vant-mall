@@ -7,7 +7,6 @@
       default-tag-text="默认"
       @add="onAdd"
       @edit="onEdit"
-      @select="onSelect"
     />
   </div>
 </template>
@@ -41,14 +40,6 @@ export default {
     this.load();
   },
   methods: {
-    // async getAddress() {
-    //   if (addressList.length > 0) {
-    //     this.isAddressList = true;
-    //     this.load()
-    //   } else {
-    //     this.isAddressList = false;
-    //   }
-    // },
     async load() {
       this.infoData = await getLocalStorage(
         "Authorization",
@@ -77,6 +68,8 @@ export default {
             });
             if (item.default === true) {
               this.chosenAddressId = item.id;
+            }else{
+              this.chosenAddressId = rows[0].id
             }
           }
         }
@@ -88,10 +81,11 @@ export default {
     onEdit(item, index) {
       this.$router.push({ name: "editaddress", query: { addressId: item.id } });
     },
-    onSelect(item, index) {
-      setLocalStorage({ AddressId: item.id });
-      this.$router.go(-1);
-    }, 
+    // onSelect(item, index) {
+    //   debugger
+    //   setLocalStorage({ AddressId: item.id });
+    //   this.$router.push({ name: 'ordercheck', query: { data: item } })
+    // }, 
   },
 };
 </script>

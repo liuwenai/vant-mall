@@ -4,7 +4,7 @@
     <van-address-edit
       style="background-color: #fff;"
       :areaList="areaList"
-      :address-info="AddressInfo"
+      :address-info="addressInfo"
       show-area
       show-set-default
       show-delete
@@ -40,7 +40,7 @@ export default {
     return {
       areaList,
       addressId: 0,
-      AddressInfo: {},
+      addressInfo: {},
       default:"",
     }
   },
@@ -57,22 +57,25 @@ export default {
   methods: {
     async init() {
       addressshow({ id: this.addressId }).then((res) => {
-        this.AddressInfo = res.row
-        this.AddressInfo.isDefault = res.row.default
+        this.addressInfo = Object.assign({},res.row,{areaCode:res.row.code})
+        this.addressInfo.isDefault = res.row.default
         debugger
-        // this.AddressInfo.areaCode = area.county_list.keys(res.row.county)
-        for(let i in area.county_list){
-          if(area.county_list[i] === res.row.county){
-            this.AddressInfo.areaCode = i
-          }
-        }
+        // this.addressInfo.areaCode = area.county_list.keys(res.row.county)
+        // for(let i in area.county_list){
+        //   if(area.county_list[i] === res.row.county){
+        //     this.addressInfo.areaCode = i
+        //   }
+        // }
       })
     },
     onSave(content) {
+      debugger
       const infoData = getLocalStorage('user_id')
       const bdefault = content.isDefault
+      const code = content.areaCode
       if (content.id != null) {
         content.default = bdefault
+        content.code = code
         addressupdate(content).then((res) => {
           this.$toast('保存成功')
           this.$router.go(-1)
