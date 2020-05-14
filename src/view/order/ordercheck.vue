@@ -93,6 +93,7 @@ export default {
       disabledCoupons: [],
       checkedGoods: [],
       fddbh: "",
+      fddsj:"",
       id: "",
       chosenAddressId: -1,
       addressList: [],
@@ -121,6 +122,7 @@ export default {
             this.checkedGoodsList = items.books;
             this.goodsTotalPrice = items.fddje;
             this.fddbh = items.fddbh;
+            this.fddsj = items.fddsj;
             this.freightPrice = items.fddyf;
             this.orderTotalPrice = items.fddje + items.fddyf;
             this.checkedAddress.name = items.name;
@@ -161,11 +163,7 @@ export default {
                 item.addressDetail,
               isDefault: item.default
             });
-            if (item.default === true) {
-              this.chosenAddressId = item.id;
-            } else {
-              this.chosenAddressId = rows[0].id;
-            }
+            this.chosenAddressId = item.id
           }
         }
       });
@@ -173,11 +171,11 @@ export default {
     onSelect(item, index) {
       this.show = false;
       this.checkedAddress = item;
+      debugger
     },
     onAdd() {
       this.show = false;
       this.$router.push({ name: "editaddress", query: { addressId: -1 } });
-      debugger;
     },
     onSubmit() {
       const data = {
@@ -185,16 +183,18 @@ export default {
         books: this.checkedGoodsList,
         fddje: this.goodsTotalPrice,
         fddbh: this.fddbh,
+        fddsj: this.fddsj,
         fddyf: this.freightPrice,
         name: this.checkedAddress.name,
         tel: this.checkedAddress.tel,
         address: this.checkedAddress.address,
         fddzt: "2"
       };
+      debugger
       morderupdate(data).then(res => {
         this.$router.push({
           name: "pay",
-          params: { fddbh: data.fddbh, fzje: data.fddje + data.fddyf }
+          params: { fddbh: data.fddbh,fzje: data.fddje + data.fddyf, name:data.name, tel:data.tel, address:data.address }
         });
       });
     }

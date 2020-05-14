@@ -11,8 +11,18 @@
       </span>
     </div>
 
-    <van-cell-group class="payment_group">
+    <!-- <van-cell-group class="payment_group">
+      <van-cell title="收货地址">
+        <div slot="label">
+          <div>
+            <span>{{ name }}</span>
+            <span>{{ tel }}</span>
+          </div>
+          <div>{{ address }}</div>
+        </div>
+      </van-cell> -->
       <van-cell title="订单编号" :value="fddbh" />
+      <!-- <van-cell title="订单时间" :value="fddsj" /> -->
       <van-cell title="实付金额">
         <span class="red">{{fzje}}</span>
       </van-cell>
@@ -93,7 +103,12 @@ export default {
       payWay: "ali",
       fddbh: [],
       fzje: 0,
-      html: ""
+      fddsj:"",
+      html: "",
+      name: "",
+      tel: "",
+      address: "",
+      addresslist: []
     };
   },
   // mounted() {
@@ -108,9 +123,14 @@ export default {
     }
   },
   mounted() {
-    const { fddbh, fzje } = this.$route.params;
+    const { fddbh, fzje, name, tel, address, fddsj } = this.$route.params;
     this.fddbh = fddbh;
     this.fzje = fzje;
+    this.name = name;
+    this.tel = tel;
+    this.address = address;
+    this.fddsj = fddsj;
+    // this.addresslist =
     // debugger
     // this.load()
   },
