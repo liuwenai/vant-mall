@@ -1,11 +1,11 @@
 <template>
   <div class="goods">
-    <van-swipe class="goods-swipe" :autoplay="3000">
+    <van-image class="img" :src="book.url" />
+    <!-- <van-swipe class="goods-swipe" :autoplay="3000">
       <van-swipe-item v-for="thumb in goods.thumb" :key="thumb">
         <img :src="thumb" />
       </van-swipe-item>
-    </van-swipe>
-
+    </van-swipe> -->
     <van-cell-group class="item_cell_group">
       <van-cell class="item_info">
         <div class="goods-title">{{ book.title }}</div>
@@ -65,7 +65,8 @@ import {
   GoodsActionIcon,
   GoodsActionButton,
   Sku,
-  Popup
+  Popup,
+  Image as VanImage
 } from "vant";
 import { bookshow, addCart, mordersave } from "@/api/mall";
 import format from "number-format.js";
@@ -79,6 +80,7 @@ export default {
     [Icon.name]: Icon,
     [Popup.name]: Popup,
     [Cell.name]: Cell,
+    [VanImage.name]: VanImage,
     [CellGroup.name]: CellGroup,
     [Swipe.name]: Swipe,
     [SwipeItem.name]: SwipeItem,
@@ -102,9 +104,7 @@ export default {
         start_sale_num: 1,
         goods_info: {
           title: "",
-          picture:
-            "https://img.yzcdn.cn/upload_files/2017/03/16/Fs_OMbSFPa183sBwvG_94llUYiLa.jpeg?imageView2/2/w/100/h/100/q/75/format/jpg",
-          price: 1
+          picture:"",
         },
         sku: {
           price: "",
@@ -117,12 +117,12 @@ export default {
         }
       },
       book: {},
-      goods: {
-        thumb: [
-          "https://img.yzcdn.cn/public_files/2017/10/24/e5a5a02309a41f9f5def56684808d9ae.jpeg",
-          "https://img.yzcdn.cn/public_files/2017/10/24/1791ba14088f9c2be8c610d0a6cc0f93.jpeg"
-        ]
-      },
+      // goods: {
+      //   thumb: [
+      //     "https://img.yzcdn.cn/public_files/2017/10/24/e5a5a02309a41f9f5def56684808d9ae.jpeg",
+      //     "https://img.yzcdn.cn/public_files/2017/10/24/1791ba14088f9c2be8c610d0a6cc0f93.jpeg"
+      //   ]
+      // },
       fid: ""
     };
   },
@@ -135,23 +135,13 @@ export default {
   },
   methods: {
     load() {
-      // booklist().then((response) => {
-      //   const { code, rows, msg } = response
-      //   for (let i = 0; i < rows.length; i++) {
-      //     if (rows[i].id === fid) {
-      //       this.book = rows[i]
-      //     }
-      //     this.skuData.goods_id = this.book.id
-      //     this.skuData.sku.price = this.book.price
-      //     this.skuData.sku.stock_num = this.book.kcsl
-      //   }
-      // })
       bookshow({ id: this.$route.query.id }).then(res => {
         const { row } = res;
         this.book = row;
+        this.skuData.goods_info.picture = row.url;
         this.skuData.goods_id = row.id;
         this.skuData.sku.price = row.price;
-        this.skuData.sku.stock_num = row.kcsl;
+        this.skuData.sku.stock_num = row.kcsl-row.gmsl;
       });
     },
     numberFormatter(value) {
@@ -164,8 +154,8 @@ export default {
       this.$router.push("cart");
     },
     onBuyClicked(data) {
-      debugger
-      let cart = { id: data.goodsId, gmsl: data.selectedNum };   
+      debugger;
+      let cart = { id: data.goodsId, gmsl: data.selectedNum };
       mordersave({ bookDtos: cart }).then(res => {
         if (res.code === 100) {
           this.$router.push({ name: "ordercheck", query: { id: res.id } });
@@ -202,6 +192,10 @@ export default {
 </script>
 
 <style lang="less">
+img {
+  width: 100%;
+  display: block;
+}
 .goods {
   padding-bottom: 50px;
   &-swipe {

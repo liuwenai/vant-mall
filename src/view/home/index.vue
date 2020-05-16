@@ -17,7 +17,7 @@
       @click="onDetailbook(book)"
     >
       <div class="item1">
-        <img class="img" :src="book.id + '.png'" />
+        <img class="img" :src="book.url" />
       </div>
       <div class="item2">
         <div>书名：{{ book.title }}</div>
@@ -127,10 +127,11 @@ export default {
 }
 .item1 {
   flex: 1;
-  margin-left: 10px;
+  margin: 10px;
 }
 .item2 {
   flex: 2;
+  margin: 10px;
 }
 .img {
   height: 80px;

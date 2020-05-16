@@ -16,7 +16,7 @@
           :key="goodsI"
           :title="goods.title"
           :num="goods.gmsl"
-          :thumb="goods.picUrl"
+          :thumb="goods.url"
         ></van-card>
         <div class="total">合计: {{ el.fddje }} 元</div>
 

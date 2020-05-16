@@ -19,7 +19,7 @@
       :title="item.title"
       :num="item.gmsl"
       :price="item.price +'.00'"
-      :thumb="item.picUrl"
+      :thumb="item.url"
     ></van-card>
 
     <van-cell-group>
@@ -49,7 +49,7 @@
       v-model="show"
       closeable
       position="bottom"
-      :style="{ height: '50%', overflow:scoll }"
+      :style="{ height: '50%' }"
     >
       <van-address-list
         v-model="chosenAddressId"
