@@ -1,9 +1,15 @@
 <template>
   <div class="item_search">
     <form action="/search" @submit="disabledSubmit">
-      <van-search placeholder="请输入商品名称" shape="round" v-model="keyword" @search="enterSearch" autofocus />
+      <van-search
+        placeholder="请输入商品名称"
+        shape="round"
+        v-model="keyword"
+        @search="enterSearch"
+        autofocus
+      />
     </form>
-    <div class="item_search_content">
+    <!-- <div class="item_search_content">
       <div class="item_search_text clearfix">
         <div class="float-l">历史搜索</div>
         <div class="float-r" @click="clearHistory">
@@ -13,34 +19,32 @@
       <div class="item_search_history">
         <van-tag plain v-for="(his, i) in wordHistory" :key="i" @click="clickSearch(his)">{{his}}</van-tag>
       </div>
-    </div>
+    </div>-->
 
-    <van-list v-model="loading" :finished="finished" :immediate-check="false" @load="loadMore">
-      <van-card
-        v-for="(item, i) in list"
-        :key="i"
-        :desc="item.brief"
-        :title="item.name"
-        :thumb="item.picUrl"
-        :price="item.retailPrice"
-        :origin-price="item.counterPrice"
-        @click="itemClick(item.id)"
-      />
-    </van-list>
+    <div class="container" v-for="(book, index) in list" :key="index" @click="itemClick(book)">
+      <div class="item1">
+        <img class="img" :src="book.url" />
+      </div>
+      <div class="item2">
+        <div>书名：{{ book.title }}</div>
+        <div>作者：{{ book.author.name}}</div>
+        <div>价格：{{ book.price }}</div>
+      </div>
+    </div>
 
     <is-empty v-if="isEmpty">抱歉,没有找到符合条件商品</is-empty>
   </div>
 </template>
 
 <script>
-import { Card, Search, Tag, List } from 'vant';
-import { booklist } from '@/api/mall';
-import IsEmpty from '@/components/is-empty/';
+import { Card, Search, Tag, List } from "vant";
+import { booklist } from "@/api/mall";
+import IsEmpty from "@/components/is-empty/";
 
 export default {
   data() {
     return {
-      keyword: '',
+      keyword: "",
       focusStatus: true,
       wordHistory: [],
       list: [],
@@ -57,74 +61,28 @@ export default {
       this.reset();
       this.searchGoods();
     },
-    clickSearch(word) {
-      this.keyword = word.trim();
-      this.reset();
-      this.searchGoods();
-    },
     reset() {
       this.list = [];
-      this.page = 1;
-      this.limit = 10;
-      this.total = 0;
-      this.loading = false;
-      this.finished = false;
-      this.isEmpty = false;
-    },
-    pushHistoryTolocal(keyword) {
-      const wordHistory = this.wordHistory;
-      const historyKeyWord = this.getKeyWordHistory();
-      if (!!keyword.trim() && historyKeyWord.indexOf(keyword) < 0) {
-        wordHistory.push(keyword);
-        window.localStorage.setItem('keyword', wordHistory.join('|'));
-      }
-    },
-    getKeyWordHistory() {
-      const listWord = window.localStorage.getItem('keyword');
-      return listWord ? listWord.split('|') : [];
-    },
-    clearHistory() {
-      this.$dialog
-        .confirm({
-          message: '是否清空历史记录'
-        })
-        .then(() => {
-          window.localStorage.setItem('keyword', '');
-          this.wordHistory = [];
-        });
     },
     disabledSubmit() {
       return false;
     },
     searchGoods() {
-      booklist({
-        keyword: this.keyword,
-        page: this.page,
-        limit: this.limit,
-        categoryId: 0
-      }).then(res => {
-        var data = res.data.data;
-        this.list.push(...data.list);
-        this.page = data.page;
-        this.limit = data.limit;
-        this.pages = data.pages;
+      booklist().then(res => {
+        const { rows } = res;
+        rows.forEach(items => {
+          if (items.title === this.keyword) {
+            this.list.push(items);
+          }
+        });
+        if (this.list == 0) {
+          this.isEmpty = true;
+        }
       });
     },
-    async loadMore() {
-      this.loading = false;
-      this.page += 1;
-      await this.searchGoods();
-      this.loading = false;
-      if (this.pages <= this.page) {
-        this.finished = true;
-      }
-    },
-    itemClick(id) {
-      this.$router.push(`/items/detail/${id}`);
+    itemClick(book) {
+      this.$router.push({ name: 'detailbook', query: { id: book.id } })
     }
-  },
-  activated() {
-    this.wordHistory = this.getKeyWordHistory();
   },
   components: {
     [Search.name]: Search,
@@ -140,6 +98,27 @@ export default {
 <style lang="less">
 .item_search {
   background-color: #fff;
+}
+.container {
+  height: 100px;
+  width: 95%;
+  display: flex;
+  flex-direction: row;
+  border: 10px;
+  margin: 10px;
+  border-bottom-color: blue;
+  background-color: #ffffff;
+}
+.item1 {
+  flex: 1;
+  margin: 10px;
+}
+.item2 {
+  flex: 2;
+  margin: 10px;
+}
+.img {
+  height: 80px;
 }
 .item_search_content {
   padding: 15px 10px 0;

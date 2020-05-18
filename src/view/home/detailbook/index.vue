@@ -194,6 +194,7 @@ export default {
 <style lang="less">
 img {
   width: 100%;
+  height: 375px;
   display: block;
 }
 .goods {
