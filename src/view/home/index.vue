@@ -17,7 +17,7 @@
       @click="onDetailbook(book)"
     >
       <div class="item1">
-        <img class="img" :src="book.url" />
+        <img class="img" :src="'http://localhost:9090/static/'+book.url" />
       </div>
       <div class="item2">
         <div>书名：{{ book.title }}</div>

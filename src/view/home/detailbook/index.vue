@@ -1,6 +1,6 @@
 <template>
   <div class="goods">
-    <van-image class="img" :src="book.url" />
+    <van-image class="img" :src="'http://localhost:9090/static/'+book.url" />
     <!-- <van-swipe class="goods-swipe" :autoplay="3000">
       <van-swipe-item v-for="thumb in goods.thumb" :key="thumb">
         <img :src="thumb" />

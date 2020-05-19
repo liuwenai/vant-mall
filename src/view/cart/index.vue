@@ -16,7 +16,7 @@
             :key="book.bookid"
             :title="book.title"
             :price="book.price + '.00'"
-            :thumb="book.url"
+            :thumb="'http://localhost:9090/static/'+book.url"
           >
             <div slot="footer">
               <van-stepper v-model="book.gmsl" @change="stepperEvent(book,arguments)" async-change />

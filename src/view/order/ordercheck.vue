@@ -19,7 +19,7 @@
       :title="item.title"
       :num="item.gmsl"
       :price="item.price +'.00'"
-      :thumb="item.url"
+      :thumb="'http://localhost:9090/static/'+item.url"
     ></van-card>
 
     <van-cell-group>
