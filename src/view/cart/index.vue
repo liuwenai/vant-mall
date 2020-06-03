@@ -135,7 +135,7 @@ export default {
         let cart = { id: item.id, gmsl: item.gmsl };
         carts.push(cart);
       });
-      debugger;
+      // debugger;
       mordersave({ bookDtos: carts }).then(res => {
         if (res.code === 100) {
           this.$router.push({ name: "ordercheck", query: { id: res.id } });

@@ -122,7 +122,6 @@ export default {
     },
     toPay(data) {
       data.fddzt = "2";
-      debugger;
       morderupdate(data).then(res => {
         this.$router.push({
           name: "pay",

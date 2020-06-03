@@ -171,7 +171,7 @@ export default {
     onSelect(item, index) {
       this.show = false;
       this.checkedAddress = item;
-      debugger
+      // debugger
     },
     onAdd() {
       this.show = false;
@@ -190,7 +190,7 @@ export default {
         address: this.checkedAddress.address,
         fddzt: "2"
       };
-      debugger
+      // debugger
       morderupdate(data).then(res => {
         this.$router.push({
           name: "pay",

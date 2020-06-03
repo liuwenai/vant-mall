@@ -135,7 +135,6 @@ export default {
         this.book = row;
         this.skuData.goods_info.picture =
           "http://localhost:9090/static/" + row.url;
-        debugger;
         this.skuData.goods_id = row.id;
         this.skuData.sku.price = row.price;
         this.skuData.sku.stock_num = row.kcsl - row.gmsl;
@@ -151,12 +150,10 @@ export default {
       this.$router.push("cart");
     },
     onBuyClicked(data) {
-      debugger;
       let cart = { id: data.goodsId, gmsl: data.selectedNum };
       mordersave({ bookDtos: cart }).then(res => {
         if (res.code === 100) {
           this.$router.push({ name: "ordercheck", query: { id: res.id } });
-          debugger;
         } else {
           this.$toast("您还没有添加地址哦~请先添加地址");
         }
@@ -164,7 +161,6 @@ export default {
     },
     onAddCartClicked(data) {
       addCart(data.goodsId, data.selectedNum).then(() => {
-        debugger;
         this.cartInfo = this.cartInfo + data.selectedNum;
         this.$toast({
           message: "已添加至购物车",

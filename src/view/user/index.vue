@@ -98,7 +98,7 @@ export default {
         "background_image",
         "avatar",
       );
-      debugger;
+      // debugger;
       if (this.infoData.Authorization != null) {
         this.isLogin = true;
         this.nick_name = this.infoData.nick_name || "昵称";

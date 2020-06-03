@@ -62,12 +62,12 @@ export default {
         addressshow({ id: this.addressId }).then((res) => {
         this.addressInfo = Object.assign({},res.row,{areaCode:res.row.code})
         this.addressInfo.isDefault = res.row.default
-        debugger
+        // debugger
       })
       }
     },
     onSave(content) {
-      debugger
+      // debugger
       const infoData = getLocalStorage('user_id')
       const bdefault = content.isDefault
       const code = content.areaCode
