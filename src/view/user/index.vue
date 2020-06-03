@@ -1,11 +1,11 @@
 <template>
   <div class="tabber-user">
-    <div class="avatar" v-if="!isLogin">
-      <img :src="avatar" alt srcset />
+    <div class="avatar" v-if="isLogin == false">
+      <img :src="avatar_default" alt srcset />
       <p @click="login">去登录</p>
     </div>
     <div class="avatar" v-else>
-      <van-icon name="set" class="user_set"/>
+      <van-icon name="set" class="user_set" />
       <div class="user_avatar">
         <img :src="avatar" alt="头像" width="55" height="55" />
       </div>
@@ -33,7 +33,7 @@
     </van-cell-group>
 
     <van-cell-group>
-      <van-cell icon="gift-o" title="收货地址"  @click="toAddress" is-link />
+      <van-cell icon="gift-o" title="收货地址" @click="toAddress" is-link />
       <van-cell icon="service-o" title="我的客服" to="/serve" is-link />
       <van-cell icon="setting-o" title="设置" to="/setting" is-link />
     </van-cell-group>
@@ -73,7 +73,7 @@ export default {
       background_image: "",
       nick_name: "",
       avatar: "",
-      infoData:[]
+      infoData: []
     };
   },
   mounted() {
@@ -97,18 +97,25 @@ export default {
         "user_id",
         "background_image",
         "avatar",
-        "login"
       );
-      this.isLogin = this.infoData.login !== "";
-      this.nick_name = this.infoData.nick_name || "昵称";
-      this.avatar = this.infoData.avatar || avatar_default;
-      this.background_image = this.infoData.background_image || bg_default;
+      debugger;
+      if (this.infoData.Authorization != null) {
+        this.isLogin = true;
+        this.nick_name = this.infoData.nick_name || "昵称";
+        this.avatar = this.infoData.avatar || avatar_default;
+        this.background_image = this.infoData.background_image || bg_default;
+      }else{
+        this.isLogin = false
+      }
     },
     login() {
       this.$router.push({ name: "login" });
     },
-    toAddress(){
-      this.$router.push({ name: 'address', params: { id: this.infoData.user_id } })
+    toAddress() {
+      this.$router.push({
+        name: "address",
+        params: { id: this.infoData.user_id }
+      });
     }
   }
 };

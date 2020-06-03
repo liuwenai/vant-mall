@@ -1,12 +1,6 @@
 <template>
   <div class="tab-cart">
-    <div class="editor_head" v-show="goods.length">
-      <!-- <van-icon :name="isEditor ? 'success' : 'editor'" />
-      <span @click="isEditor = !isEditor">
-        {{
-        isEditor ? '完成' : '编辑'
-        }}
-      </span>-->
+    <div class="editor_head" v-show="goods">
     </div>
     <van-checkbox-group v-model="checkedGoods" @change="totalAdd" ref="checkboxGroup">
       <div v-for="(book, index) in goods" :key="index" class="card-goods__item">
@@ -34,7 +28,7 @@
         </van-swipe-cell>
       </div>
     </van-checkbox-group>
-    <is-empty v-if="!goods.length">您的购物车空空如也~</is-empty>
+    <is-empty v-if="!goods">您的购物车空空如也~</is-empty>
     <van-submit-bar
       style="bottom: 50px"
       :price="totalPrice"
@@ -108,7 +102,7 @@ export default {
       checkedGoods: [],
       allGoods: [],
       goods: [],
-      totalPrice: 0
+      totalPrice: 0,
     };
   },
   computed: {
@@ -123,6 +117,7 @@ export default {
     load() {
       cartlist().then(res => {
         const { rows } = res;
+        this.length = res.total
         this.goods = rows;
       });
     },
@@ -180,7 +175,14 @@ export default {
   text-align: right;
   padding: 10px;
   font-size: 14px;
-  background-color: #fff;
+  background-color: #f2f2f2;
+}
+.van-card {
+    position: relative;
+    box-sizing: border-box;
+    padding: 8px 12px;
+    font-size: 12px;
+    background-color: #fafafa;
 }
 .card-goods__item {
   background-color: #f2f2f2;
