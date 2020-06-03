@@ -73,6 +73,7 @@ export default {
         rows.forEach(items => {
           if (items.title === this.keyword) {
             this.list.push(items);
+            this.isEmpty = false;
           }
         });
         if (this.list == 0) {

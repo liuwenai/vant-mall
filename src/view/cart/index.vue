@@ -19,7 +19,7 @@
             :thumb="'http://localhost:9090/static/'+book.url"
           >
             <div slot="footer">
-              <van-stepper v-model="book.gmsl" @change="stepperEvent(book,arguments)" async-change />
+              <van-stepper v-model="book.gmsl" disabled/>
             </div>
           </van-card>
           <template #right>
@@ -120,15 +120,6 @@ export default {
     this.load();
   },
   methods: {
-    stepperEvent(book, arg) {
-      debugger;
-      let number = arg[0];
-      cartupdate({
-        num: number,
-        book: { id: book.bookid },
-        id: book.id
-      });
-    },
     load() {
       cartlist().then(res => {
         const { rows } = res;

@@ -6,7 +6,7 @@
         <van-field label="账号" readonly :value="username" />
         <van-field label="用户名" readonly :value="usermc" />
         <van-field label="绑定电话" readonly :value="fmobile" />
-        <van-field label="密码"  :value="password" />
+        <van-field label="密码" readonly :value="password" />
       </van-cell-group>
     </div>
   </div>

@@ -9,8 +9,23 @@
         :key="i"
         :title="'订单编号: ' + el.fddbh"
         :status="el.orderStatusText"
-        @click.native="toOrderDetail(el.id)"
       >
+        <van-cell title="订单地址">
+          <div slot="label">
+            <div>
+              <span>{{ el.name }}</span>
+              <span>{{ el.tel }}</span>
+            </div>
+            <div v-if="el.address != null">{{ el.address }}</div>
+            <div v-else>
+              {{ el.province +
+              el.city +
+              el.county +
+              " " +
+              el.addressDetail }}
+            </div>
+          </div>
+        </van-cell>
         <van-card
           v-for="(goods, goodsI) in el.books"
           :key="goodsI"

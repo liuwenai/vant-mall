@@ -1,11 +1,11 @@
 <template>
   <div class="goods">
-    <van-image class="img" :src="'http://localhost:9090/static/'+book.url" />
+    <van-image class="goods-img" :src="'http://localhost:9090/static/'+book.url" />
     <!-- <van-swipe class="goods-swipe" :autoplay="3000">
       <van-swipe-item v-for="thumb in goods.thumb" :key="thumb">
         <img :src="thumb" />
       </van-swipe-item>
-    </van-swipe> -->
+    </van-swipe>-->
     <van-cell-group class="item_cell_group">
       <van-cell class="item_info">
         <div class="goods-title">{{ book.title }}</div>
@@ -14,7 +14,7 @@
 
       <van-cell class="goods-express">
         <van-col span="10">运费：{{ book.express }}元</van-col>
-        <van-col span="14">剩余：{{ book.kcsl }}本</van-col>
+        <van-col span="14">剩余：{{ book.kcsl-book.gmsl }}本</van-col>
       </van-cell>
     </van-cell-group>
 
@@ -104,7 +104,7 @@ export default {
         start_sale_num: 1,
         goods_info: {
           title: "",
-          picture:"",
+          picture: ""
         },
         sku: {
           price: "",
@@ -116,21 +116,16 @@ export default {
           list: []
         }
       },
-      book: {},
+      book: {}
       // goods: {
       //   thumb: [
       //     "https://img.yzcdn.cn/public_files/2017/10/24/e5a5a02309a41f9f5def56684808d9ae.jpeg",
       //     "https://img.yzcdn.cn/public_files/2017/10/24/1791ba14088f9c2be8c610d0a6cc0f93.jpeg"
       //   ]
       // },
-      fid: ""
     };
   },
-  created() {
-    this.fid = this.$route.params.id;
-  },
   mounted() {
-    this.fid = this.$route.query.id;
     this.load();
   },
   methods: {
@@ -138,10 +133,12 @@ export default {
       bookshow({ id: this.$route.query.id }).then(res => {
         const { row } = res;
         this.book = row;
-        this.skuData.goods_info.picture = row.url;
+        this.skuData.goods_info.picture =
+          "http://localhost:9090/static/" + row.url;
+        debugger;
         this.skuData.goods_id = row.id;
         this.skuData.sku.price = row.price;
-        this.skuData.sku.stock_num = row.kcsl-row.gmsl;
+        this.skuData.sku.stock_num = row.kcsl - row.gmsl;
       });
     },
     numberFormatter(value) {
@@ -199,13 +196,12 @@ img {
 }
 .goods {
   padding-bottom: 50px;
-  &-swipe {
-    img {
-      width: 100%;
-      display: block;
-    }
-  }
 
+  &-img {
+    width: 100%;
+    height: 375px;
+    display: block;
+  }
   &-title {
     font-size: 16px;
   }

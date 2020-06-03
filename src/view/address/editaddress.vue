@@ -56,17 +56,15 @@ export default {
   },
   methods: {
     async init() {
-      addressshow({ id: this.addressId }).then((res) => {
+      if(this.addressId == -1){
+        this.addressInfo = {}
+      }else{
+        addressshow({ id: this.addressId }).then((res) => {
         this.addressInfo = Object.assign({},res.row,{areaCode:res.row.code})
         this.addressInfo.isDefault = res.row.default
         debugger
-        // this.addressInfo.areaCode = area.county_list.keys(res.row.county)
-        // for(let i in area.county_list){
-        //   if(area.county_list[i] === res.row.county){
-        //     this.addressInfo.areaCode = i
-        //   }
-        // }
       })
+      }
     },
     onSave(content) {
       debugger
@@ -83,6 +81,7 @@ export default {
       } else {
         content.user = { id: infoData.user_id }
         content.default = bdefault
+        content.code = code
         addresssave(content).then((res) => {
           this.$toast('保存成功')
           this.$router.go(-1)
